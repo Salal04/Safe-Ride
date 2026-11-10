@@ -1,0 +1,975 @@
+Frame 1; 
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  420.17445221437106 , 476.96385320276977
+Track_id: 10 Signed angle: -175.76 Abs angle: 175.76 Is Turning: True
+(CX, Cy):  143.15028889176318 , 487.30342424911544
+(CX, Cy):  1252.5243131901216 , 486.1131113610775
+(CX, Cy):  1190.478114159327 , 546.4440221722753
+Track_id: 23 Signed angle: -178.57 Abs angle: 178.57 Is Turning: True
+(CX, Cy):  1366.5047262298124 , 521.6085132451138
+(CX, Cy):  947.1890815518631 , 505.03461067273224
+Track_id: 30 Signed angle: -178.99 Abs angle: 178.99 Is Turning: True
+(CX, Cy):  565.0147896758168 , 691.8008285109781
+Track_id: 31 Signed angle: 163.43 Abs angle: 163.43 Is Turning: True
+(CX, Cy):  744.7270683245067 , 546.4807881399408
+Track_id: 42 Signed angle: 179.24 Abs angle: 179.24 Is Turning: True
+(CX, Cy):  1373.631273495425 , 520.7477631592443
+(CX, Cy):  330.34701697068965 , 534.232252080754
+Track_id: 59 Signed angle: -138.6 Abs angle: 138.6 Is Turning: True
+(CX, Cy):  622.0284493808028 , 583.4506724633825
+Track_id: 61 Signed angle: 175.55 Abs angle: 175.55 Is Turning: True
+(CX, Cy):  1347.8356050442783 , 616.750690615657
+Track_id: 62 Signed angle: -178.9 Abs angle: 178.9 Is Turning: True
+(CX, Cy):  1275.296978270633 , 607.4326494577942
+Track_id: 66 Signed angle: -179.53 Abs angle: 179.53 Is Turning: True
+(CX, Cy):  686.4974246779532 , 614.8102726158304
+(CX, Cy):  31.428048058330145 , 567.6792065108377
+(CX, Cy):  1397.5 , 529.0
+
+
+Frame 1; 
+0: 960x1280 17 persons, 3 cars, 8 motorcycles, 1630.2ms
+Speed: 21.5ms preprocess, 1630.2ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+
+0: 960x1280 (no detections), 1661.1ms
+Speed: 23.4ms preprocess, 1661.1ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1644.3ms
+Speed: 26.3ms preprocess, 1644.3ms inference, 1.1ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  423.12365723836183 , 477.6475970042572
+Track_id: 10 Signed angle: -175.84 Abs angle: 175.84 Is Turning: True
+(CX, Cy):  143.20896649373373 , 487.1767599036201
+(CX, Cy):  1252.8249070084626 , 485.6296134391173
+(CX, Cy):  1192.8883420225943 , 546.4663927378604
+Track_id: 23 Signed angle: -178.43 Abs angle: 178.43 Is Turning: True
+(CX, Cy):  1367.5719796391757 , 522.114408296054
+(CX, Cy):  947.9822084557265 , 505.94952345972155
+Track_id: 30 Signed angle: -179.03 Abs angle: 179.03 Is Turning: True
+(CX, Cy):  555.9350171975371 , 695.0001686731623
+Track_id: 31 Signed angle: 162.82 Abs angle: 162.82 Is Turning: True
+(CX, Cy):  744.3099519449585 , 547.301512029723
+Track_id: 42 Signed angle: 179.1 Abs angle: 179.1 Is Turning: True
+(CX, Cy):  1371.4625742215658 , 521.2005685531942
+Track_id: 53 Signed angle: 178.86 Abs angle: 178.86 Is Turning: True
+(CX, Cy):  337.0310197644603 , 533.2737205412317
+Track_id: 59 Signed angle: -139.42 Abs angle: 139.42 Is Turning: True
+(CX, Cy):  618.8688617302644 , 583.107037590032
+Track_id: 61 Signed angle: 175.32 Abs angle: 175.32 Is Turning: True
+(CX, Cy):  1359.6622466689578 , 620.845831283631
+Track_id: 62 Signed angle: -178.78 Abs angle: 178.78 Is Turning: True
+(CX, Cy):  1281.3855578777338 , 609.869094294284
+Track_id: 66 Signed angle: -179.51 Abs angle: 179.51 Is Turning: True
+(CX, Cy):  678.5880525173435 , 618.8201653561775
+(CX, Cy):  40.700576840045635 , 566.4369097013257
+
+0: 960x1280 17 persons, 4 cars, 8 motorcycles, 1689.7ms
+Speed: 18.6ms preprocess, 1689.7ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+
+0: 960x1280 (no detections), 1685.3ms
+Speed: 22.6ms preprocess, 1685.3ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 (no detections), 1633.5ms
+Speed: 25.7ms preprocess, 1633.5ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+================= Draw State ==============================
+(CX, Cy):  425.5207242618943 , 477.57271309839643
+Track_id: 10 Signed angle: -175.94 Abs angle: 175.94 Is Turning: True
+(CX, Cy):  143.26764409570427 , 487.0500955581248
+(CX, Cy):  1253.1255008268035 , 485.1461155171571
+(CX, Cy):  1195.298569885861 , 546.4887633034454
+Track_id: 23 Signed angle: -178.3 Abs angle: 178.3 Is Turning: True
+(CX, Cy):  1368.6392330485387 , 522.6203033469941
+(CX, Cy):  950.4581165252267 , 506.7779566702096
+Track_id: 30 Signed angle: -179.09 Abs angle: 179.09 Is Turning: True
+(CX, Cy):  546.2283196587655 , 697.1241956675381
+Track_id: 31 Signed angle: 162.31 Abs angle: 162.31 Is Turning: True
+(CX, Cy):  746.6973290708872 , 547.902493198028
+Track_id: 42 Signed angle: 179.0 Abs angle: 179.0 Is Turning: True
+(CX, Cy):  1369.2938749477066 , 521.6533739471441
+Track_id: 53 Signed angle: 178.75 Abs angle: 178.75 Is Turning: True
+(CX, Cy):  345.2405849615777 , 530.9944079348641
+Track_id: 59 Signed angle: -140.54 Abs angle: 140.54 Is Turning: True
+(CX, Cy):  615.7092740797261 , 582.7634027166814
+Track_id: 61 Signed angle: 175.16 Abs angle: 175.16 Is Turning: True
+(CX, Cy):  1371.708914744399 , 624.9177275653421
+Track_id: 62 Signed angle: -178.72 Abs angle: 178.72 Is Turning: True
+(CX, Cy):  1287.474137484835 , 612.3055391307737
+Track_id: 66 Signed angle: -179.48 Abs angle: 179.48 Is Turning: True
+(CX, Cy):  672.8392250076078 , 619.0493568580268
+(CX, Cy):  50.45359025226256 , 564.5977996550021
+
+0: 960x1280 17 persons, 3 cars, 8 motorcycles, 1713.2ms
+Speed: 18.1ms preprocess, 1713.2ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+
+0: 960x1280 (no detections), 1676.4ms
+Speed: 24.8ms preprocess, 1676.4ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1634.3ms
+Speed: 26.1ms preprocess, 1634.3ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  426.6880583181837 , 477.54328662186435
+Track_id: 10 Signed angle: -176.05 Abs angle: 176.05 Is Turning: True
+(CX, Cy):  143.3263216976748 , 486.92343121262945
+(CX, Cy):  1253.4260946451445 , 484.66261759519693
+(CX, Cy):  1197.708797749128 , 546.5111338690303
+Track_id: 23 Signed angle: -178.16 Abs angle: 178.16 Is Turning: True
+(CX, Cy):  1369.706486457902 , 523.1261983979342
+(CX, Cy):  952.9340245947269 , 507.6063898806977
+Track_id: 30 Signed angle: -179.17 Abs angle: 179.17 Is Turning: True
+(CX, Cy):  538.5635967152857 , 698.1796379976815
+Track_id: 31 Signed angle: 161.97 Abs angle: 161.97 Is Turning: True
+(CX, Cy):  748.2399430351702 , 548.7356562239643
+Track_id: 42 Signed angle: 178.88 Abs angle: 178.88 Is Turning: True
+(CX, Cy):  1367.1251756738475 , 522.106179341094
+Track_id: 53 Signed angle: 178.62 Abs angle: 178.62 Is Turning: True
+(CX, Cy):  349.94827944582966 , 529.5801931679143
+Track_id: 59 Signed angle: -141.92 Abs angle: 141.92 Is Turning: True
+(CX, Cy):  612.5496864291879 , 582.4197678433306
+Track_id: 61 Signed angle: 174.92 Abs angle: 174.92 Is Turning: True
+(CX, Cy):  1381.2492064472876 , 627.3604388377289
+Track_id: 62 Signed angle: -178.6 Abs angle: 178.6 Is Turning: True
+(CX, Cy):  1293.5627170919356 , 614.7419839672634
+Track_id: 66 Signed angle: -179.45 Abs angle: 179.45 Is Turning: True
+(CX, Cy):  668.5792226539874 , 618.4666872278183
+(CX, Cy):  57.11875272223651 , 562.5842949001922
+
+0: 960x1280 17 persons, 4 cars, 7 motorcycles, 1640.0ms
+Speed: 19.5ms preprocess, 1640.0ms inference, 0.8ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+
+0: 960x1280 (no detections), 1604.0ms
+Speed: 23.0ms preprocess, 1604.0ms inference, 0.5ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 (no detections), 1568.4ms
+Speed: 33.0ms preprocess, 1568.4ms inference, 1.1ms postprocess per image at shape (1, 3, 960, 1280)
+================= Draw State ==============================
+(CX, Cy):  428.06189559469806 , 477.19909991566954
+Track_id: 10 Signed angle: -176.15 Abs angle: 176.15 Is Turning: True
+(CX, Cy):  143.38499929964536 , 486.7967668671341
+(CX, Cy):  1253.7266884634855 , 484.17911967323676
+(CX, Cy):  1200.119025612395 , 546.5335044346155
+Track_id: 23 Signed angle: -178.2 Abs angle: 178.2 Is Turning: True
+(CX, Cy):  1370.7737398672655 , 523.6320934488743
+(CX, Cy):  955.4099326642272 , 508.43482309118576
+Track_id: 30 Signed angle: -179.21 Abs angle: 179.21 Is Turning: True
+(CX, Cy):  528.4181303598259 , 702.4247636176481
+Track_id: 31 Signed angle: 161.62 Abs angle: 161.62 Is Turning: True
+(CX, Cy):  749.7702401215624 , 549.6627055968718
+Track_id: 42 Signed angle: 178.79 Abs angle: 178.79 Is Turning: True
+(CX, Cy):  1364.9564763999883 , 522.558984735044
+Track_id: 53 Signed angle: 178.5 Abs angle: 178.5 Is Turning: True
+(CX, Cy):  355.39792942960423 , 526.7889087962402
+Track_id: 59 Signed angle: -143.45 Abs angle: 143.45 Is Turning: True
+(CX, Cy):  609.3900987786494 , 582.07613296998
+Track_id: 61 Signed angle: 174.95 Abs angle: 174.95 Is Turning: True
+(CX, Cy):  1391.1051520516367 , 631.440633462898
+Track_id: 62 Signed angle: -178.53 Abs angle: 178.53 Is Turning: True
+(CX, Cy):  1299.6512966990365 , 617.1784288037531
+Track_id: 66 Signed angle: -179.42 Abs angle: 179.42 Is Turning: True
+(CX, Cy):  661.2826607279644 , 618.8890506970073
+Track_id: 70 Signed angle: 175.25 Abs angle: 175.25 Is Turning: True
+(CX, Cy):  66.08222839828032 , 561.5523823477223
+
+0: 960x1280 16 persons, 4 cars, 9 motorcycles, 1 truck, 1597.6ms
+Speed: 23.6ms preprocess, 1597.6ms inference, 0.7ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found truck
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+
+0: 960x1280 (no detections), 1675.4ms
+Speed: 21.8ms preprocess, 1675.4ms inference, 0.7ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1585.2ms
+Speed: 24.6ms preprocess, 1585.2ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  429.5433985645917 , 477.2012420649755
+Track_id: 10 Signed angle: -176.31 Abs angle: 176.31 Is Turning: True
+(CX, Cy):  1254.0272822818265 , 483.6956217512766
+(CX, Cy):  1202.529253475662 , 546.5558750002003
+Track_id: 23 Signed angle: -178.2 Abs angle: 178.2 Is Turning: True
+(CX, Cy):  1371.8409932766288 , 524.1379884998145
+(CX, Cy):  967.1853204251063 , 509.9087462447262
+Track_id: 30 Signed angle: -179.11 Abs angle: 179.11 Is Turning: True
+(CX, Cy):  516.9978159449585 , 706.253184685823
+Track_id: 31 Signed angle: 161.16 Abs angle: 161.16 Is Turning: True
+(CX, Cy):  752.5935330000113 , 550.3017487626042
+Track_id: 42 Signed angle: 178.75 Abs angle: 178.75 Is Turning: True
+(CX, Cy):  1362.7877771261292 , 523.0117901289939
+Track_id: 53 Signed angle: 178.38 Abs angle: 178.38 Is Turning: True
+(CX, Cy):  363.1685660063433 , 525.5093561309745
+Track_id: 59 Signed angle: -145.34 Abs angle: 145.34 Is Turning: True
+(CX, Cy):  606.2305111281111 , 581.7324980966293
+Track_id: 61 Signed angle: 174.99 Abs angle: 174.99 Is Turning: True
+(CX, Cy):  1400.4300252637006 , 635.8294335196158
+Track_id: 62 Signed angle: -178.38 Abs angle: 178.38 Is Turning: True
+(CX, Cy):  1305.7398763061374 , 619.6148736402429
+Track_id: 66 Signed angle: -179.39 Abs angle: 179.39 Is Turning: True
+(CX, Cy):  652.1270190420412 , 614.7520101521241
+Track_id: 70 Signed angle: 174.83 Abs angle: 174.83 Is Turning: True
+(CX, Cy):  75.57792024829732 , 559.8530102421284
+
+0: 960x1280 17 persons, 4 cars, 9 motorcycles, 1 truck, 1697.9ms
+Speed: 18.4ms preprocess, 1697.9ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found truck
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+
+0: 960x1280 (no detections), 1570.5ms
+Speed: 21.5ms preprocess, 1570.5ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1601.8ms
+Speed: 23.2ms preprocess, 1601.8ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  432.17233089069515 , 477.82304477221896
+Track_id: 10 Signed angle: -176.4 Abs angle: 176.4 Is Turning: True
+(CX, Cy):  1254.3278761001675 , 483.2121238293164
+(CX, Cy):  1372.9082466859918 , 524.6438835507546
+(CX, Cy):  970.4932675248069 , 510.7949324525911
+Track_id: 30 Signed angle: -178.98 Abs angle: 178.98 Is Turning: True
+(CX, Cy):  509.67279107529964 , 708.2827264102182
+Track_id: 31 Signed angle: 160.7 Abs angle: 160.7 Is Turning: True
+(CX, Cy):  754.289866715684 , 551.4808681130105
+Track_id: 42 Signed angle: 178.72 Abs angle: 178.72 Is Turning: True
+(CX, Cy):  1360.61907785227 , 523.4645955229438
+Track_id: 53 Signed angle: 178.25 Abs angle: 178.25 Is Turning: True
+(CX, Cy):  367.75686609253216 , 524.8062857094902
+Track_id: 59 Signed angle: -147.23 Abs angle: 147.23 Is Turning: True
+(CX, Cy):  603.0709234775727 , 581.3888632232787
+Track_id: 61 Signed angle: 175.0 Abs angle: 175.0 Is Turning: True
+(CX, Cy):  1406.9524834617084 , 638.7091448097765
+Track_id: 62 Signed angle: -178.6 Abs angle: 178.6 Is Turning: True
+(CX, Cy):  1311.8284559132383 , 622.0513184767326
+Track_id: 66 Signed angle: -179.36 Abs angle: 179.36 Is Turning: True
+(CX, Cy):  647.1930109806601 , 614.5018741023124
+Track_id: 70 Signed angle: 174.52 Abs angle: 174.52 Is Turning: True
+(CX, Cy):  81.81036521318138 , 558.5971243176725
+
+0: 960x1280 15 persons, 4 cars, 9 motorcycles, 1 truck, 1 backpack, 1640.4ms
+Speed: 20.4ms preprocess, 1640.4ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found truck
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found backpack
+ClassName : give: ['motorcycle'] -> found motorcycle
+
+0: 960x1280 (no detections), 1702.6ms
+Speed: 23.1ms preprocess, 1702.6ms inference, 0.7ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1644.4ms
+Speed: 21.8ms preprocess, 1644.4ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  433.58665190190993 , 477.96528629323024
+Track_id: 10 Signed angle: -176.42 Abs angle: 176.42 Is Turning: True
+(CX, Cy):  1254.6284699185085 , 482.72862590735616
+(CX, Cy):  1373.975500095355 , 525.1497786016947
+(CX, Cy):  976.7397932681829 , 511.9344607171374
+Track_id: 30 Signed angle: -178.77 Abs angle: 178.77 Is Turning: True
+(CX, Cy):  499.68043478665186 , 711.2523098222961
+Track_id: 31 Signed angle: 160.37 Abs angle: 160.37 Is Turning: True
+(CX, Cy):  755.8732113606952 , 552.871022729195
+Track_id: 42 Signed angle: 178.68 Abs angle: 178.68 Is Turning: True
+(CX, Cy):  1358.450378578411 , 523.9174009168937
+Track_id: 53 Signed angle: 178.12 Abs angle: 178.12 Is Turning: True
+(CX, Cy):  373.193611142985 , 523.2854716256361
+Track_id: 59 Signed angle: -148.71 Abs angle: 148.71 Is Turning: True
+(CX, Cy):  599.9113358270343 , 581.045228349928
+Track_id: 61 Signed angle: 174.98 Abs angle: 174.98 Is Turning: True
+(CX, Cy):  1413.0323116309999 , 642.6296193805724
+Track_id: 62 Signed angle: -178.74 Abs angle: 178.74 Is Turning: True
+(CX, Cy):  1317.9170355203391 , 624.4877633132223
+Track_id: 66 Signed angle: -179.33 Abs angle: 179.33 Is Turning: True
+(CX, Cy):  639.053165163659 , 615.709337157294
+Track_id: 70 Signed angle: 174.04 Abs angle: 174.04 Is Turning: True
+(CX, Cy):  89.21242794320949 , 556.8262675198164
+
+0: 960x1280 18 persons, 1 bicycle, 4 cars, 8 motorcycles, 1626.7ms
+Speed: 20.6ms preprocess, 1626.7ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+
+0: 960x1280 (no detections), 1571.5ms
+Speed: 22.7ms preprocess, 1571.5ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1579.3ms
+Speed: 23.7ms preprocess, 1579.3ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  435.16784140776576 , 478.04067845647324
+Track_id: 10 Signed angle: -176.34 Abs angle: 176.34 Is Turning: True
+(CX, Cy):  1254.9290637368495 , 482.24512798539604
+(CX, Cy):  1375.0427535047186 , 525.6556736526348
+(CX, Cy):  980.3420609267966 , 512.8460210206997
+Track_id: 30 Signed angle: -178.69 Abs angle: 178.69 Is Turning: True
+(CX, Cy):  487.99552019708847 , 714.9150309756519
+Track_id: 31 Signed angle: 160.08 Abs angle: 160.08 Is Turning: True
+(CX, Cy):  758.0630893248829 , 554.0145680167652
+Track_id: 42 Signed angle: 178.6 Abs angle: 178.6 Is Turning: True
+(CX, Cy):  1356.2816793045517 , 524.3702063108436
+Track_id: 53 Signed angle: 177.99 Abs angle: 177.99 Is Turning: True
+(CX, Cy):  379.28811565021596 , 521.4592329212902
+Track_id: 59 Signed angle: -149.88 Abs angle: 149.88 Is Turning: True
+(CX, Cy):  1418.948559667436 , 639.1036546497697
+Track_id: 62 Signed angle: -178.7 Abs angle: 178.7 Is Turning: True
+(CX, Cy):  1324.0056151274403 , 626.9242081497121
+Track_id: 66 Signed angle: -179.3 Abs angle: 179.3 Is Turning: True
+(CX, Cy):  629.6117529300299 , 613.9015512479577
+Track_id: 70 Signed angle: 173.65 Abs angle: 173.65 Is Turning: True
+(CX, Cy):  97.72972639736798 , 554.5276044942287
+
+0: 960x1280 17 persons, 2 bicycles, 3 cars, 6 motorcycles, 1 truck, 1 backpack, 1580.1ms
+Speed: 18.0ms preprocess, 1580.1ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found backpack
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found truck
+
+0: 960x1280 (no detections), 1576.2ms
+Speed: 21.6ms preprocess, 1576.2ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1675.6ms
+Speed: 24.7ms preprocess, 1675.6ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  436.7490309136215 , 478.1160706197162
+Track_id: 10 Signed angle: -176.24 Abs angle: 176.24 Is Turning: True
+(CX, Cy):  1255.2296575551904 , 481.76163006343586
+(CX, Cy):  1376.1100069140819 , 526.161568703575
+(CX, Cy):  983.9443285854104 , 513.7575813242618
+Track_id: 30 Signed angle: -178.6 Abs angle: 178.6 Is Turning: True
+(CX, Cy):  478.95031134668716 , 717.201819286591
+Track_id: 31 Signed angle: 159.73 Abs angle: 159.73 Is Turning: True
+(CX, Cy):  760.1555153891738 , 554.7383744399767
+Track_id: 42 Signed angle: 178.55 Abs angle: 178.55 Is Turning: True
+(CX, Cy):  1354.1129800306926 , 524.8230117047935
+Track_id: 53 Signed angle: 177.85 Abs angle: 177.85 Is Turning: True
+(CX, Cy):  383.58781131862594 , 520.8813284375855
+Track_id: 59 Signed angle: -150.78 Abs angle: 150.78 Is Turning: True
+(CX, Cy):  1424.3649793960067 , 637.4576492956255
+Track_id: 62 Signed angle: -178.58 Abs angle: 178.58 Is Turning: True
+(CX, Cy):  1330.094194734541 , 629.3606529862018
+Track_id: 66 Signed angle: -179.27 Abs angle: 179.27 Is Turning: True
+(CX, Cy):  622.6470077715501 , 613.224364571934
+Track_id: 70 Signed angle: 173.05 Abs angle: 173.05 Is Turning: True
+(CX, Cy):  102.89227223548417 , 553.7477180190607
+
+0: 960x1280 19 persons, 2 bicycles, 3 cars, 6 motorcycles, 1 truck, 1 backpack, 1601.2ms
+Speed: 22.8ms preprocess, 1601.2ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found backpack
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found truck
+ClassName : give: ['motorcycle'] -> found person
+
+0: 960x1280 (no detections), 1570.0ms
+Speed: 21.2ms preprocess, 1570.0ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1565.5ms
+Speed: 34.1ms preprocess, 1565.5ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  438.3302204194773 , 478.1914627829592
+Track_id: 10 Signed angle: -176.21 Abs angle: 176.21 Is Turning: True
+(CX, Cy):  1255.5302513735314 , 481.2781321414757
+(CX, Cy):  1377.1772603234454 , 526.6674637545151
+(CX, Cy):  987.5465962440242 , 514.669141627824
+Track_id: 30 Signed angle: -178.59 Abs angle: 178.59 Is Turning: True
+(CX, Cy):  468.30327940803784 , 719.9409869081145
+Track_id: 31 Signed angle: 159.29 Abs angle: 159.29 Is Turning: True
+(CX, Cy):  762.2077660619028 , 555.3035642674422
+Track_id: 42 Signed angle: 178.63 Abs angle: 178.63 Is Turning: True
+(CX, Cy):  1351.9442807568335 , 525.2758170987435
+Track_id: 53 Signed angle: 177.7 Abs angle: 177.7 Is Turning: True
+(CX, Cy):  388.2818098800169 , 520.0630532078642
+Track_id: 59 Signed angle: -151.79 Abs angle: 151.79 Is Turning: True
+(CX, Cy):  1432.4056815853914 , 639.5753818601371
+Track_id: 62 Signed angle: -178.45 Abs angle: 178.45 Is Turning: True
+(CX, Cy):  1336.182774341642 , 631.7970978226915
+Track_id: 66 Signed angle: -179.23 Abs angle: 179.23 Is Turning: True
+(CX, Cy):  614.041888388236 , 616.8270472539289
+Track_id: 70 Signed angle: 172.58 Abs angle: 172.58 Is Turning: True
+(CX, Cy):  110.92070452666206 , 552.8350031825067
+Track_id: 73 Signed angle: -167.08 Abs angle: 167.08 Is Turning: True
+
+0: 960x1280 17 persons, 2 bicycles, 3 cars, 5 motorcycles, 1 truck, 1608.4ms
+Speed: 18.8ms preprocess, 1608.4ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found truck
+
+0: 960x1280 (no detections), 1611.6ms
+Speed: 19.7ms preprocess, 1611.6ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1623.8ms
+Speed: 24.6ms preprocess, 1623.8ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  439.9114099253331 , 478.2668549462022
+Track_id: 10 Signed angle: -176.21 Abs angle: 176.21 Is Turning: True
+(CX, Cy):  1255.8308451918724 , 480.7946342195155
+(CX, Cy):  1378.2445137328084 , 527.1733588054552
+(CX, Cy):  991.1488639026379 , 515.5807019313862
+Track_id: 30 Signed angle: -178.58 Abs angle: 178.58 Is Turning: True
+(CX, Cy):  456.390471563559 , 723.1816375698211
+Track_id: 31 Signed angle: 158.87 Abs angle: 158.87 Is Turning: True
+(CX, Cy):  763.5967764860145 , 557.1040431569011
+Track_id: 42 Signed angle: 178.69 Abs angle: 178.69 Is Turning: True
+(CX, Cy):  1349.7755814829743 , 525.7286224926934
+Track_id: 53 Signed angle: 177.55 Abs angle: 177.55 Is Turning: True
+(CX, Cy):  392.7684166199374 , 519.1631963884233
+Track_id: 59 Signed angle: -152.98 Abs angle: 152.98 Is Turning: True
+(CX, Cy):  1440.4463837747758 , 641.6931144246487
+Track_id: 62 Signed angle: -178.4 Abs angle: 178.4 Is Turning: True
+(CX, Cy):  1342.2713539487427 , 634.2335426591812
+Track_id: 66 Signed angle: -179.22 Abs angle: 179.22 Is Turning: True
+(CX, Cy):  604.0706829387432 , 615.9698763656728
+Track_id: 70 Signed angle: 171.88 Abs angle: 171.88 Is Turning: True
+(CX, Cy):  118.97717158719738 , 552.2124107799605
+Track_id: 73 Signed angle: -165.96 Abs angle: 165.96 Is Turning: True
+
+0: 960x1280 16 persons, 1 bicycle, 2 cars, 8 motorcycles, 1 truck, 1554.6ms
+Speed: 15.6ms preprocess, 1554.6ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found truck
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+
+0: 960x1280 (no detections), 1565.2ms
+Speed: 21.0ms preprocess, 1565.2ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1565.7ms
+Speed: 22.7ms preprocess, 1565.7ms inference, 0.8ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  441.49259943118886 , 478.3422471094452
+Track_id: 10 Signed angle: -176.19 Abs angle: 176.19 Is Turning: True
+(CX, Cy):  1256.1314390102134 , 480.3111362975553
+(CX, Cy):  1379.3117671421714 , 527.6792538563953
+Track_id: 24 Signed angle: 179.67 Abs angle: 179.67 Is Turning: True
+(CX, Cy):  994.7511315612517 , 516.4922622349484
+Track_id: 30 Signed angle: -178.55 Abs angle: 178.55 Is Turning: True
+(CX, Cy):  448.9061554729014 , 725.3049868997323
+Track_id: 31 Signed angle: 158.5 Abs angle: 158.5 Is Turning: True
+(CX, Cy):  766.0220704078924 , 558.086336475063
+Track_id: 42 Signed angle: 178.74 Abs angle: 178.74 Is Turning: True
+(CX, Cy):  1347.6068822091152 , 526.1814278866433
+Track_id: 53 Signed angle: 177.42 Abs angle: 177.42 Is Turning: True
+(CX, Cy):  395.176890389661 , 518.2209189841866
+Track_id: 59 Signed angle: -154.23 Abs angle: 154.23 Is Turning: True
+(CX, Cy):  1448.48708596416 , 643.8108469891602
+Track_id: 62 Signed angle: -178.38 Abs angle: 178.38 Is Turning: True
+(CX, Cy):  1348.3599335558436 , 636.669987495671
+Track_id: 66 Signed angle: -179.24 Abs angle: 179.24 Is Turning: True
+(CX, Cy):  597.9154110232099 , 615.0102497685325
+Track_id: 70 Signed angle: 171.4 Abs angle: 171.4 Is Turning: True
+(CX, Cy):  124.69194306843322 , 551.6974189914624
+Track_id: 73 Signed angle: -164.88 Abs angle: 164.88 Is Turning: True
+(CX, Cy):  1366.0 , 649.0
+
+0: 960x1280 17 persons, 1 bicycle, 1 car, 6 motorcycles, 1 truck, 1494.9ms
+Speed: 22.0ms preprocess, 1494.9ms inference, 0.7ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found truck
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+
+0: 960x1280 (no detections), 1666.1ms
+Speed: 18.2ms preprocess, 1666.1ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 1 indicator, 1924.2ms
+Speed: 27.5ms preprocess, 1924.2ms inference, 1.3ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['indicator'] -> found indicator
+================= Draw State ==============================
+(CX, Cy):  443.07378893704464 , 478.41763927268835
+Track_id: 10 Signed angle: -176.17 Abs angle: 176.17 Is Turning: True
+(CX, Cy):  1380.3790205515352 , 528.1851489073355
+Track_id: 24 Signed angle: 179.71 Abs angle: 179.71 Is Turning: True
+(CX, Cy):  998.3533992198654 , 517.4038225385106
+Track_id: 30 Signed angle: -178.5 Abs angle: 178.5 Is Turning: True
+(CX, Cy):  436.9015914374047 , 729.291724213816
+Track_id: 31 Signed angle: 158.09 Abs angle: 158.09 Is Turning: True
+(CX, Cy):  769.8240255292792 , 560.3706938186863
+Track_id: 42 Signed angle: 178.79 Abs angle: 178.79 Is Turning: True
+(CX, Cy):  1345.438182935256 , 526.6342332805932
+Track_id: 53 Signed angle: 177.29 Abs angle: 177.29 Is Turning: True
+(CX, Cy):  399.525791968201 , 518.2874787365364
+Track_id: 59 Signed angle: -155.52 Abs angle: 155.52 Is Turning: True
+(CX, Cy):  1456.5277881535449 , 645.9285795536719
+Track_id: 62 Signed angle: -178.33 Abs angle: 178.33 Is Turning: True
+(CX, Cy):  1354.4485131629444 , 639.1064323321607
+Track_id: 66 Signed angle: -179.26 Abs angle: 179.26 Is Turning: True
+(CX, Cy):  589.3173398995186 , 614.31371840675
+Track_id: 70 Signed angle: 170.8 Abs angle: 170.8 Is Turning: True
+(CX, Cy):  131.54729305896063 , 551.2183357185136
+Track_id: 73 Signed angle: -163.79 Abs angle: 163.79 Is Turning: True
+(CX, Cy):  1259.0 , 515.0
+
+0: 960x1280 16 persons, 1 bicycle, 2 cars, 7 motorcycles, 1733.5ms
+Speed: 27.5ms preprocess, 1733.5ms inference, 0.7ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found motorcycle
+
+0: 960x1280 (no detections), 1724.0ms
+Speed: 23.6ms preprocess, 1724.0ms inference, 0.5ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 (no detections), 1748.7ms
+Speed: 23.6ms preprocess, 1748.7ms inference, 1.3ms postprocess per image at shape (1, 3, 960, 1280)
+================= Draw State ==============================
+(CX, Cy):  444.6549784429004 , 478.49303143593136
+Track_id: 10 Signed angle: -176.17 Abs angle: 176.17 Is Turning: True
+(CX, Cy):  1381.446273960898 , 528.6910439582756
+Track_id: 24 Signed angle: 179.76 Abs angle: 179.76 Is Turning: True
+(CX, Cy):  1001.9556668784792 , 518.3153828420727
+Track_id: 30 Signed angle: -178.45 Abs angle: 178.45 Is Turning: True
+(CX, Cy):  421.54434133565445 , 733.0053978189478
+Track_id: 31 Signed angle: 157.5 Abs angle: 157.5 Is Turning: True
+(CX, Cy):  772.2127330586898 , 562.1914648121864
+Track_id: 42 Signed angle: 178.87 Abs angle: 178.87 Is Turning: True
+(CX, Cy):  1343.2694836613969 , 527.0870386745431
+Track_id: 53 Signed angle: 177.16 Abs angle: 177.16 Is Turning: True
+(CX, Cy):  404.8517412691986 , 517.0300029011013
+Track_id: 59 Signed angle: -156.72 Abs angle: 156.72 Is Turning: True
+(CX, Cy):  1464.5684903429296 , 648.0463121181836
+Track_id: 62 Signed angle: -178.29 Abs angle: 178.29 Is Turning: True
+(CX, Cy):  1360.5370927700455 , 641.5428771686504
+Track_id: 66 Signed angle: -179.29 Abs angle: 179.29 Is Turning: True
+(CX, Cy):  577.8461744665152 , 614.04724651136
+Track_id: 70 Signed angle: 170.39 Abs angle: 170.39 Is Turning: True
+(CX, Cy):  138.15972975104762 , 550.7488491968281
+Track_id: 73 Signed angle: -162.83 Abs angle: 162.83 Is Turning: True
+(CX, Cy):  1260.3016528925623 , 514.1322314049587
+(CX, Cy):  1323.5 , 541.0
+
+0: 960x1280 14 persons, 1 bicycle, 2 cars, 7 motorcycles, 1680.9ms
+Speed: 23.2ms preprocess, 1680.9ms inference, 0.7ms postprocess per image at shape (1, 3, 960, 1280)
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found bicycle
+ClassName : give: ['motorcycle'] -> found person
+ClassName : give: ['motorcycle'] -> found motorcycle
+ClassName : give: ['motorcycle'] -> found car
+
+0: 960x1280 (no detections), 1673.0ms
+Speed: 24.3ms preprocess, 1673.0ms inference, 0.6ms postprocess per image at shape (1, 3, 960, 1280)
+
+0: 960x1280 (no detections), 1697.2ms
+Speed: 24.9ms preprocess, 1697.2ms inference, 1.2ms postprocess per image at shape (1, 3, 960, 1280)
+================= Draw State ==============================
+(CX, Cy):  446.2361679487562 , 478.56842359917437
+Track_id: 10 Signed angle: -176.2 Abs angle: 176.2 Is Turning: True
+(CX, Cy):  1382.5135273702617 , 529.1969390092157
+Track_id: 24 Signed angle: 179.79 Abs angle: 179.79 Is Turning: True
+(CX, Cy):  1005.5579345370929 , 519.2269431456349
+Track_id: 30 Signed angle: -178.41 Abs angle: 178.41 Is Turning: True
+(CX, Cy):  411.114475854069 , 736.2859615920695
+Track_id: 31 Signed angle: 156.87 Abs angle: 156.87 Is Turning: True
+(CX, Cy):  773.0583717657985 , 563.4954498741008
+Track_id: 42 Signed angle: 178.81 Abs angle: 178.81 Is Turning: True
+(CX, Cy):  1341.1007843875377 , 527.539844068493
+Track_id: 53 Signed angle: 177.02 Abs angle: 177.02 Is Turning: True
+(CX, Cy):  410.1776905701962 , 515.7725270656662
+Track_id: 59 Signed angle: -157.65 Abs angle: 157.65 Is Turning: True
+(CX, Cy):  1472.609192532314 , 650.164044682695
+Track_id: 62 Signed angle: -178.26 Abs angle: 178.26 Is Turning: True
+(CX, Cy):  1366.6256723771462 , 643.9793220051401
+Track_id: 66 Signed angle: -179.3 Abs angle: 179.3 Is Turning: True
+(CX, Cy):  570.3887550370235 , 614.2712537866514
+Track_id: 70 Signed angle: 169.65 Abs angle: 169.65 Is Turning: True
+(CX, Cy):  143.3376318215745 , 550.2798309606796
+Track_id: 73 Signed angle: -161.86 Abs angle: 161.86 Is Turning: True
+(CX, Cy):  1260.5263806809294 , 514.3641883463273
+(CX, Cy):  1326.1033057851237 , 540.1322314049587
+(CX, Cy):  686.0 , 465.5
+(DeepSort) PS E:\dataset\projectCode\deepSort> 

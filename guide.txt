@@ -1,0 +1,20 @@
+1): first of all decide a matric 
+
+        metric = nn_matching.NearestNeighborDistanceMetric("cosine", MAX_COSINE_DISTANCE, NN_BUDGET)
+
+            1): NearestNeighborDistanceMetric("cosine", ...) → feature vectors ke similarity ke liye cosine distance use hoti hai.
+            2): MAX_COSINE_DISTANCE → threshold for considering two features the same.
+            3): NN_BUDGET → maximum number of feature vectors stored per track.
+            4): NearestNeighborDistanceMetric have dic that keep all feature of the object
+                  
+                  1): def partial_fit(self, features, targets, active_targets):
+
+                        - Har frame ke detections ke features ko store/update karna.
+                        - Sirf currently active tracks ke features retain karna.
+                        - Agar budget set hai → maximum features per track limit enforce karna.
+
+2): create a tracker object that will keep the track   
+
+    tracker = Tracker(metric, max_iou_distance=0.7, max_age=MAX_AGE, n_init=N_INIT)
+
+        1): required metric object 
