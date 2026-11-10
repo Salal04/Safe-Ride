@@ -11,8 +11,7 @@ from pathlib import Path
 COLAB_ROOT = Path("/content")
 BASE_DIR = COLAB_ROOT / "deepSort"
 DRIVE_DIR = COLAB_ROOT / "drive" / "MyDrive"
-SAFERIDE_DRIVE_DIR = DRIVE_DIR / "SafeRideVision"
-WEIGHTS_DIR = SAFERIDE_DRIVE_DIR / "weights"
+WEIGHTS_DIR = DRIVE_DIR / "Motor-Bikes-Data" / "local_project_weights"
 VIDEO_PATH = BASE_DIR / "Input"
 LEGACY_VIDEO_PATH = VIDEO_PATH / "vid1.mp4"
 LEGACY_IMAGE_PATH = VIDEO_PATH / "img1.jpg"
@@ -29,10 +28,15 @@ MANIFEST_PATH = BASE_DIR / "manifest.json"
 # All trained/downloaded model weights live in Drive, not in the Git checkout.
 YOLO_BIKE_MODEL_PATH = WEIGHTS_DIR / "yolov10m.pt"
 MIRROR_MODEL_PATH = WEIGHTS_DIR / "bestM.pt"
-INDICATOR_MODEL_PATH = WEIGHTS_DIR / "indicator_best.pt"
+INDICATOR_MODEL_PATH = WEIGHTS_DIR / "indicator_yolov12m_best.pt"
 REID_WEIGHTS = WEIGHTS_DIR / "model.pth.tar-50"
-MARS_REID_WEIGHTS = BASE_DIR / "deep_sort" / "networks" / "mars-small128.pb"
-ORIENTATION_MODEL_PATH = WEIGHTS_DIR / "orientation detector.pt"
+OSNET_IMAGENET_WEIGHTS = WEIGHTS_DIR / "osnet_x1_0_imagenet.pth"
+MARS_REID_WEIGHTS = WEIGHTS_DIR / "mars-small128.pb"
+_ORIENTATION_NAMES = ("oreintation detector.pt", "orientation detector.pt")
+ORIENTATION_MODEL_PATH = next(
+    (WEIGHTS_DIR / name for name in _ORIENTATION_NAMES if (WEIGHTS_DIR / name).is_file()),
+    WEIGHTS_DIR / _ORIENTATION_NAMES[0],
+)
 BLINK_WEIGHTS = WEIGHTS_DIR / "best_model.pth"
 BIKE_PLATE_MODEL_PATH = WEIGHTS_DIR / "best (4).pt"
 BIKE_MODEL_PATH = BIKE_PLATE_MODEL_PATH
@@ -45,6 +49,13 @@ REQUIRED_WEIGHTS = {
     "orientation": ORIENTATION_MODEL_PATH,
     "blink": BLINK_WEIGHTS,
     "bike_plate_detector": BIKE_PLATE_MODEL_PATH,
+}
+OPTIONAL_WEIGHTS = {
+    # The active pipeline uses the project-trained checkpoint above. This
+    # ImageNet checkpoint is available for alternate OSNet experiments.
+    "osnet_imagenet_pretraining": OSNET_IMAGENET_WEIGHTS,
+    # Only the legacy deepsort.py script uses this TensorFlow encoder.
+    "legacy_mars_reid": MARS_REID_WEIGHTS,
 }
 
 # Backend settings
