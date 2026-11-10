@@ -12,20 +12,21 @@ import os
 import cv2
 import numpy as np
 from ultralytics import YOLO
+from config import *
 
 # ------------------------------------------------------------------
 # LOGGING SETUP — writes to BOTH the console and a log file, so if the
 # Colab process/session dies silently we still have a file on disk
 # (flushed after every line) showing exactly the last thing that
 # happened before it died. Look at this file first when debugging a
-# silent stop: /content/drive/MyDrive/output-Bike/Logs/run_debug.log
+# silent stop; its location is configured in config.py.
 # ------------------------------------------------------------------
-_LOG_DIR_FOR_LOGGING = "/content/drive/MyDrive/output-Bike/Logs"
+_LOG_DIR_FOR_LOGGING = str(LOG_DIR)
 os.makedirs(_LOG_DIR_FOR_LOGGING, exist_ok=True)
 _log_file_path = os.path.join(_LOG_DIR_FOR_LOGGING, "run_debug.log")
 
 logger = logging.getLogger("deepsortVideo")
-logger.setLevel(logging.DEBUG)
+logger.setLevel(getattr(logging, LOG_LEVEL))
 logger.handlers.clear()
 
 _file_handler = logging.FileHandler(_log_file_path, mode="a", encoding="utf-8")
@@ -67,7 +68,7 @@ from plate_detector import (
 )
 print(torch.cuda.is_available())
 print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "No GPU")
-device ="cuda" if torch.cuda.is_available() else "cpu";
+device = ("cuda" if torch.cuda.is_available() else "cpu") if DEVICE == "auto" else DEVICE
 _orig_load = torch.load
 torch.load = lambda *a, **k: _orig_load(*a, **{**k, 'weights_only': False})
 
@@ -88,34 +89,6 @@ import platform
 import datetime
 import glob
 import math
-
-PROFILE_ENABLED = True
-# True  -> har stage ke start/end par torch.cuda.synchronize() (exact GPU time,
-#          thora sa overhead). False -> sirf CPU wall-clock (GPU async hone ki
-#          wajah se numbers galat aa sakte hain, sirf overhead check karne ke liye).
-PROFILE_SYNC_CUDA = True
-PROFILE_WARMUP_FRAMES = 3          # pehle N frames stats se bahar (cuDNN/CUDA lazy init)
-PROFILE_LOG_EVERY_FRAME = True     # har frame ki full breakdown log karo
-PROFILE_SUMMARY_EVERY = 50         # har N frames par rolling top-bottleneck summary
-PROFILE_SLOW_FRAME_FACTOR = 2.0    # frame > factor * median  => SLOW FRAME warning
-PROFILE_GPU_SAMPLE_INTERVAL = 0.1  # seconds (pynvml); nvidia-smi fallback par >=1.0s
-PROFILE_SAVE_DIR_NAME = "profile"  # <LOG_DIR>/profile/
-
-# Rough spec table (FP32 TFLOPS, mem bandwidth GB/s, VRAM GB) -- sirf "what-if"
-# projection ke liye. Ye estimate hai, asli measurement nahi.
-GPU_SPECS = {
-    "A10G": (31.2, 600, 24),
-    "A100": (19.5, 1555, 40),
-    "H100": (67.0, 3350, 80),
-    "V100": (15.7, 900, 16),
-    "RTX 4090": (82.6, 1008, 24),
-    "RTX 3090": (35.6, 936, 24),
-    "L4": (30.3, 300, 24),
-    "T4": (8.1, 320, 16),
-}
-# Stages jo mostly GPU par chalte hain (what-if scaling sirf inhi par lagti hai)
-_GPU_STAGE_HINTS = (".model_call", "reid.extract", "blink.forward", "plate.detect", "ocr.read")
-
 
 def _nvsmi(query):
     try:
@@ -145,7 +118,7 @@ def collect_hw_info():
         "torch_cuda": getattr(torch.version, "cuda", None),
         "opencv": cv2.__version__,
         "numpy": np.__version__,
-        "is_colab": ("google.colab" in sys.modules) or os.path.exists("/content"),
+        "is_colab": ("google.colab" in sys.modules) or COLAB_ROOT.exists(),
         "cpu_count": os.cpu_count(),
         "precision": "FP32 (YOLO half=False, OSNet/blink FP32)",
     }
@@ -588,8 +561,8 @@ class PipelineProfiler:
         n = len(frames)
         rep = {"video": self.video, "hw": self.hw, "meta": dict(self.run_meta), "extra": extra or {},
                "config": {
-                   "imgsz": 1280, "yolo_model": YOLO_MODEL, "mirror_model": MIRROR_DETECTOR,
-                   "indicator_model": INDICATOR_DETECTOR, "orientation_model": Orientation_detector_path,
+                   "imgsz": INFERENCE_IMAGE_SIZE, "yolo_model": str(YOLO_BIKE_MODEL_PATH), "mirror_model": str(MIRROR_MODEL_PATH),
+                   "indicator_model": str(INDICATOR_MODEL_PATH), "orientation_model": str(ORIENTATION_MODEL_PATH),
                    "osnet_input": list(OSNET_INPUT_SIZE), "min_conf": MIN_CONFIDENCE, "plate_conf": PLATE_CONF,
                    "cuda_sync": self.sync, "warmup_frames": PROFILE_WARMUP_FRAMES},
                "startup_ms": {k: {"ms": v[0], "calls": v[1]} for k, v in self.startup.items()},
@@ -724,7 +697,7 @@ class PipelineProfiler:
             key, spec = _spec_for((self.hw or {}).get("gpu_name"))
             if not spec:
                 return None
-            gpu_ms = sum(e["mean_ms_frame"] for s, e in stages.items() if any(h in s for h in _GPU_STAGE_HINTS))
+            gpu_ms = sum(e["mean_ms_frame"] for s, e in stages.items() if any(h in s for h in GPU_STAGE_HINTS))
             tot = sum(e["mean_ms_frame"] for e in stages.values())
             cpu_ms = max(0.0, tot - gpu_ms)
             out = {"measured_on": key, "gpu_bound_ms_frame": gpu_ms, "cpu_bound_ms_frame": cpu_ms, "targets": {}}
@@ -1012,117 +985,12 @@ def compare_reports(paths):
     return text
 
 
-# ----------------- User params -----------------
-VIDEO_PATH = "/content/deepSort/Input";  # apna video path yahan
-OUTPUT_PATH = "/content/drive/MyDrive/output-Bike" 
-LOG_DIR=  "/content/drive/MyDrive/output-Bike/Logs"   # optional, processed video save karna ho
-# Fallback root for a video's whole output folder (video + CSV + bikes/)
-# when run_video() is called with output_path=None. See run_video() for the
-# full layout:
-#   <root>/<video_base>/annotatedvideo.mp4
-#   <root>/<video_base>/<video_base>_bikes.csv
-#   <root>/<video_base>/bikes/<track_id>/annotated_frame.jpg
-#   <root>/<video_base>/bikes/<track_id>/plate_crop.jpg
-PUBLIC_OUTPUT_DIR = os.path.join(OUTPUT_PATH, "public")
-YOLO_MODEL = "yolov10m.pt"
-# Bike-specific OSNet ReID weights (torchreid .pth.tar checkpoint), trained
-# on your motorcycle re-identification dataset. Replaces the old TF
-# mars-small128.pb pedestrian encoder — see build_osnet_encoder() below for
-# the wrapper that makes it a drop-in replacement for gdet.create_box_encoder.
-REID_WEIGHTS = "/content/drive/MyDrive/Motor-Bikes-Data/Replace-files/model.pth.tar-50"
-OSNET_MODEL_NAME = "osnet_x1_0"          # matches build_model(name='osnet_x1_0', ...) in training
-OSNET_INPUT_SIZE = (256, 256)            # (H, W) — matches ImageDataManager(height=256, width=256, ...)
-                                          # NOTE: square, not the pedestrian-standard 256x128. Getting
-                                          # this wrong silently distorts every crop at inference and
-                                          # degrades the embeddings without throwing any error.
-# Old combined mirror/indicator model — now used ONLY for the mirror class.
-MIRROR_DETECTOR = "/content/deepSort/mirror-indicator-yolov10m/weights/bestM.pt"
-# New model: yolov12m, trained on a single class ("indicator") only. Swap
-# this path to wherever that weight file (e.g. best.pt) lives on disk.
-INDICATOR_DETECTOR = "/content/deepSort/indicator-yolov12m/weights/best.pt"
-Orientation_detector_path ='/content/drive/MyDrive/Motor-Bikes-Data/oreintation detector.pt'; 
-# Tuned for mars-small128's pedestrian embedding space — OSNet bike features
-# live in a different feature space, so re-tune this empirically once the
-# new encoder is in (try a validation clip, sweep ~0.15-0.4, pick whichever
-# minimizes ID switches without over-merging distinct bikes).
-MAX_COSINE_DISTANCE = 0.2
-NN_BUDGET = 100
-MIN_CONFIDENCE = 0.3
-NMS_MAX_OVERLAP = 1.0   # NMS applied to raw detections before they reach the tracker
-N_INIT = 3
-MAX_AGE = 30
-DRAW_TRAILS = True
-TRAIL_LEN = 20
-
-# A bike's cropped bounding box must be at least this many pixels (w*h)
-# before it's even considered as a candidate for that track's "best/largest
-# image" (used later for plate OCR). Filters out the tiny/far/noisy boxes
-# that would otherwise win "largest so far" on a track that never actually
-# got close enough to read a plate from. Tune to your footage/resolution.
-MIN_BIKE_AREA_FOR_BEST_IMAGE = 6000
-
-# The plate DETECTOR (YOLO, from plate_detector.py) runs every frame, for
-# every live bike, inside the main loop below — same as the bike/mirror/
-# indicator/orientation detectors already do. PLATE_CONF is that model's
-# confidence threshold. OCR (EasyOCR) is ALSO called from inside that same
-# loop now — but only on a new-largest plate crop for a track that hasn't
-# been read yet, not every frame — see the plate DETECTOR + live-OCR block
-# in the main loop, and Track.plate_locked in track.py.
-PLATE_CONF = 0.3
-
-# A detected plate box must be at least this many pixels (w*h) before it's
-# considered a candidate for that bike's "best/largest plate seen so far"
-# (the one whose crop gets saved as plate_crop.jpg). Same idea as
-# MIN_BIKE_AREA_FOR_BEST_IMAGE, just tuned for a much smaller object —
-# tune to your footage/resolution.
-MIN_PLATE_AREA_FOR_SAVE = 400
-
-# How many REAL (non carried-forward) detections a mirror/indicator slot
-# needs before "this bike has both mirrors / both indicators" is allowed to
-# become True. Keeps one noisy false-positive box from flipping that fact.
-MIN_SLOT_HITS_FOR_BOTH = 3
-
-# ----------------- Turn zones -----------------
-# Define zero, one, or many "turn zones" — regions of the frame where, if a
-# bike's box overlaps enough, it's considered to be taking a turn (in
-# addition to the angle-based detector in track.py). Any mix of shapes is
-# fine, and the list can be empty (pipeline then runs on angle-detection
-# alone, same as before).
-#
-# Each zone is a dict:
-#   {"type": "polygon",   "points": [(x1,y1), (x2,y2), (x3,y3), ...]}   # >=3 points, any shape
-#   {"type": "rectangle", "points": [(x1,y1), (x2,y2)]}                  # top-left, bottom-right corners
-#                                                                        # (a 4-point list also works — treated as a polygon)
-#   {"type": "circle",    "center": (cx, cy), "radius": r}
-#
-# Example (uncomment / edit for your video):
-# TURN_ZONES = [
-#     {"type": "polygon",   "points": [(120, 300), (420, 300), (500, 520), (60, 520)]},
-#     {"type": "rectangle", "points": [(900, 150), (1180, 420)]},
-#     {"type": "circle",    "center": (1500, 650), "radius": 140},
-# ]
-TURN_ZONES = []
-
-# % (0.0-1.0) of a bike's bounding-box area that must fall inside a turn
-# zone before it counts as "taking the turn". Kept as its own variable so it
-# can be tuned later without touching the detection logic itself.
-TURN_ZONE_OVERLAP_THRESHOLD = 0.30
-
-# Color/thickness the zones themselves are drawn with in the output video.
-TURN_ZONE_DRAW_COLOR = (255, 255, 0)   # BGR — cyan-ish, distinct from bike/mirror/indicator boxes
-TURN_ZONE_DRAW_THICKNESS = 2
-# ------------------------------------------------
-counter = 0;
-os.makedirs(OUTPUT_PATH , exist_ok=True);
-os.makedirs(LOG_DIR , exist_ok=True);
 
 
-#----------------------------------------------------
-
-cfg = ModelConfig(cnn_name="resnet18", seq_type="RNN", num_layers=2, hidden_size=256, dropout=0.5)
+cfg = ModelConfig(**BLINK_MODEL_CONFIG)
 def _load_blink():
     _m = build_model(cfg)
-    return load_weights(_m, "/content/drive/MyDrive/Motor-Bikes-Data/blink model weights/best_model.pth", device=device)
+    return load_weights(_m, BLINK_WEIGHTS, device=device)
 blink_detector = P.load_model("blink", _load_blink, input="seq of 64x64 indicator crops")
 
 
@@ -1476,7 +1344,7 @@ def expand_box(x1,y1,x2,y2,  w, h, pad_ratio=0.30):
 def getDetections(model, frame , detect , confidence = MIN_CONFIDENCE, tag = "det.unknown"):
         try:
             with P.stage(f"{tag}.model_call"):        # preprocess + GPU inference + NMS, CUDA-synced
-                results = model(frame , imgsz = 1280)
+                results = model(frame, imgsz=INFERENCE_IMAGE_SIZE)
             try:
                 P.note_ult(tag, results[0].speed)     # Ultralytics' own pre/infer/post ms
             except Exception:
@@ -1812,10 +1680,10 @@ def run_video(video_path, output_path=None, display_name=None):
     # DETECTOR block in the main loop below and _save_plate_snapshot().
     best_plate_area_by_track = {}
 
-    yolo = P.load_model("det.bike", lambda: YOLO(YOLO_MODEL).to(device), weights=YOLO_MODEL, imgsz=1280)
-    mirror_detector = P.load_model("det.mirror", lambda: YOLO(MIRROR_DETECTOR).to(device), weights=MIRROR_DETECTOR, imgsz=1280)
-    indicator_detector = P.load_model("det.indicator", lambda: YOLO(INDICATOR_DETECTOR).to(device), weights=INDICATOR_DETECTOR, imgsz=1280)
-    orientation_detector = P.load_model("det.orientation", lambda: YOLO(Orientation_detector_path).to(device), weights=Orientation_detector_path, imgsz=1280)
+    yolo = P.load_model("det.bike", lambda: YOLO(str(YOLO_BIKE_MODEL_PATH)).to(device), weights=str(YOLO_BIKE_MODEL_PATH), imgsz=INFERENCE_IMAGE_SIZE)
+    mirror_detector = P.load_model("det.mirror", lambda: YOLO(str(MIRROR_MODEL_PATH)).to(device), weights=str(MIRROR_MODEL_PATH), imgsz=INFERENCE_IMAGE_SIZE)
+    indicator_detector = P.load_model("det.indicator", lambda: YOLO(str(INDICATOR_MODEL_PATH)).to(device), weights=str(INDICATOR_MODEL_PATH), imgsz=INFERENCE_IMAGE_SIZE)
+    orientation_detector = P.load_model("det.orientation", lambda: YOLO(str(ORIENTATION_MODEL_PATH)).to(device), weights=str(ORIENTATION_MODEL_PATH), imgsz=INFERENCE_IMAGE_SIZE)
 
     # Plate DETECTOR (YOLO) — preloaded up front, right alongside the other
     # per-frame detectors above, since it runs every frame inside the main
@@ -1841,7 +1709,7 @@ def run_video(video_path, output_path=None, display_name=None):
 
     # Init DeepSORT
     metric = nn_matching.NearestNeighborDistanceMetric("cosine", MAX_COSINE_DISTANCE, NN_BUDGET)
-    tracker = Tracker(metric, max_iou_distance=0.7, max_age=MAX_AGE, n_init=N_INIT)
+    tracker = Tracker(metric, max_iou_distance=MAX_IOU_DISTANCE, max_age=MAX_AGE, n_init=N_INIT)
 
     encoder = P.load_model("reid.osnet", lambda: build_osnet_encoder(REID_WEIGHTS, device=device),
                            weights=REID_WEIGHTS, input=list(OSNET_INPUT_SIZE))

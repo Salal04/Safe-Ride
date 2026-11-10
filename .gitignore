@@ -1,0 +1,20 @@
+# Python environments and generated caches
+.venv/
+__pycache__/
+*.py[cod]
+
+# Model checkpoints stay in Google Drive, not in the Git checkout
+*.pt
+*.pth
+*.pth.tar
+*.pb
+*.onnx
+*.ckpt
+*.engine
+*.weights
+*.safetensors
+
+# Runtime output
+uploads/
+output_public/
+run_logs/

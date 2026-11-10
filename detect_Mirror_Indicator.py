@@ -1,8 +1,9 @@
 from ultralytics import YOLO
-model = YOLO("mirror-indicator-yolov10m\\weights\\best.pt")
+from config import *
+model = YOLO(str(MIRROR_MODEL_PATH))
 
 
-result = model('img1.jpg')
+result = model(str(LEGACY_IMAGE_PATH))
 
 print(result)
 

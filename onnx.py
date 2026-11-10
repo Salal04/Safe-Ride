@@ -1,7 +1,8 @@
 from ultralytics import YOLO
+from config import *
 
-model = YOLO("mirror-indicator-yolov10m/weights/bestM.pt")
+model = YOLO(str(MIRROR_MODEL_PATH))
 model.export(format="onnx")
 
-model = YOLO("mirror-indicator-yolov10m/weights/bestI.pt")
+model = YOLO(str(INDICATOR_MODEL_PATH))
 model.export(format="onnx")

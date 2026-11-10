@@ -13,6 +13,7 @@ from collections import deque
 import cv2
 import numpy as np
 from ultralytics import YOLO
+from config import *
 
 # --- Deep SORT (nwojke/deep_sort) imports ---
 # Make sure `deep_sort` repo folder is in PYTHONPATH or installed as package
@@ -22,17 +23,6 @@ from deep_sort.deep_sort.tracker import Tracker
 from deep_sort.tools import generate_detections as gdet  # contains create_box_encoder
 
 # ----------------- User params -----------------
-YOLO_MODEL = "yolov10m.pt"                 # change if you want bigger model
-REID_WEIGHTS = "deep_sort/networks/mars-small128.pb"  # put your reid model here
-MAX_COSINE_DISTANCE = 0.2
-NN_BUDGET = 100
-MIN_CONFIDENCE = 0.3        # ignore detections below this
-N_INIT = 3                  # confirm track after N frames
-MAX_AGE = 30                # drop track after this many frames missing
-DRAW_TRAILS = True
-TRAIL_LEN = 20
-Mirror_indicater_DETECTOR ="mirror-indicator-yolov10m\\weights\\bestM.pt"
-
 # ------------------------------------------------
 
 def xyxy_to_tlwh(box):
@@ -48,12 +38,12 @@ def main(source=0, output=None, show=True):
 
     # --- Init DeepSORT metric & tracker ---
     metric = nn_matching.NearestNeighborDistanceMetric("cosine", MAX_COSINE_DISTANCE, NN_BUDGET)
-    tracker = Tracker(metric, max_iou_distance=0.7, max_age=MAX_AGE, n_init=N_INIT)
+    tracker = Tracker(metric, max_iou_distance=MAX_IOU_DISTANCE, max_age=MAX_AGE, n_init=N_INIT)
 
     # --- Create feature encoder (uses TF frozen graph) ---
-    if not Path(REID_WEIGHTS).exists():
-        raise FileNotFoundError(f"ReID model not found at {REID_WEIGHTS}. Download 'mars-small128.pb' or equivalent and place it there.")
-    encoder = gdet.create_box_encoder(REID_WEIGHTS, batch_size=1)
+    if not Path(MARS_REID_WEIGHTS).exists():
+        raise FileNotFoundError(f"ReID model not found at {MARS_REID_WEIGHTS}. Download 'mars-small128.pb' or equivalent and place it there.")
+    encoder = gdet.create_box_encoder(str(MARS_REID_WEIGHTS), batch_size=1)
 
     # --- Video source ---
     cap = cv2.VideoCapture(source)
@@ -83,7 +73,7 @@ def main(source=0, output=None, show=True):
             frame_idx += 1
 
             # YOLO inference (single frame). results[0] is the Results object
-            results = yolo(frame, imgsz=640, device=None)  # device None -> use default (GPU if available)
+            results = yolo(frame, imgsz=LEGACY_IMAGE_SIZE, device=None)  # device None -> use default (GPU if available)
             res = results[0]
 
             # Collect motorcycle detections: [x1,y1,x2,y2,conf]
@@ -91,10 +81,6 @@ def main(source=0, output=None, show=True):
             if hasattr(res, "boxes"):
                 for box in res.boxes:
                     cls = int(box.cls.cpu().numpy()[0]) if hasattr(box, "cls") else int(box.cls)
-                    MOTORCYCLE_CLASS_ID = 3  # apne data.yaml se confirm karo
-
-                   
-
                     if cls != MOTORCYCLE_CLASS_ID:
                       continue
 
@@ -206,7 +192,7 @@ def main(source=0, output=None, show=True):
 if __name__ == "__main__":
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("--source", type=str, default="E:\\dataset\\projectCode\\deepSort\\vid1.mp4", help="0 for webcam or path to video")
+    p.add_argument("--source", type=str, default=str(LEGACY_VIDEO_PATH), help="0 for webcam or path to video")
     p.add_argument("--output", type=str, default=None, help="optional output video path")
     args = p.parse_args()
 

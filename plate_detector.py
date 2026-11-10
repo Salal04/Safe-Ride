@@ -65,6 +65,7 @@ import cv2
 import traceback
 import threading
 import numpy as np
+from config import *
 from datetime import datetime
 from collections import Counter
 
@@ -104,51 +105,6 @@ class _Watchdog:
 # ============================================================
 # MODEL PATHS — edit these once
 # ============================================================
-BIKE_MODEL_PATH = "/content/drive/MyDrive/Motor-Bikes-Data/no plates/best (4).pt"
-PLATE_MODEL_PATH = "/content/drive/MyDrive/Motor-Bikes-Data/no plates/best (4).pt"
-BIKE_CLASS_ID = 3  # class id of "bike/motorcycle" in bike_detector
-
-# GOT-OCR 2.0 model repo id (downloaded/cached by huggingface on first use).
-GOT_OCR_MODEL_ID = "stepfun-ai/GOT-OCR2_0"
-
-# ocr_type passed to model.chat(): 'ocr' = plain text (what we want for a
-# plate crop — a short alphanumeric string). 'format' is for documents with
-# tables/formulas/layout and is NOT what plate crops need.
-GOT_OCR_TYPE = "ocr"
-
-# GOT-OCR 2.0's chat() call takes an image FILE PATH, not an array -- so
-# _run_ocr() below writes each plate crop out to a temp file every call.
-# This is that temp file's path (overwritten each call, not kept around).
-GOT_OCR_TMP_PATH = "/tmp/_plate_detector_got_ocr_crop.jpg"
-
-# Characters GOT-OCR 2.0's output is allowed to keep — cuts down O/0, I/1, S/5 style
-# confusions on plate-style fonts. Set to None to allow any character.
-OCR_ALLOWLIST = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"
-
-# class id of "number-plate" in PLATE_MODEL_PATH's OWN class list.
-# IMPORTANT: without this set correctly, detect_plates_in_bike_crop()'s
-# .predict() call has no class filter at all, so it happily returns boxes
-# for ANY class the model knows about — including, e.g., a "motorcycle"
-# box — and treats it as if it were a plate. This is exactly what caused
-# plate_crop.jpg to sometimes come out as the whole bike instead of just
-# the plate. The first time the plate model loads, its class list gets
-# printed as "plate_detector class names (id -> label): {...}" — check
-# that log line and set PLATE_CLASS_ID to whichever id says "plate" /
-# "number-plate" / "number_plate" there. Leave as None only while you
-# haven't checked yet (PLATE_MAX_AREA_RATIO below still catches the worst
-# case even with no class filter, but it's a safety net, not a fix).
-PLATE_CLASS_ID = None
-
-# A "plate" box this much bigger, relative to the whole bike crop it was
-# found in, is almost certainly NOT a real plate — a real plate is a small
-# fraction of a bike's visible area. Anything at or above this ratio gets
-# thrown out (see detect_plates_in_bike_crop()), which is the safety net
-# that keeps a wrong PLATE_CLASS_ID (or no class filter at all) from ever
-# producing a plate_crop.jpg that's actually a picture of the whole bike.
-PLATE_MAX_AREA_RATIO = 0.40
-
-# Folder jahan har incoming image automatically save hogi
-IMAGE_SAVE_DIR = "received_images"
 
 _bike_detector = None
 _plate_detector = None
@@ -405,7 +361,7 @@ def _run_ocr(plate_crop, ocr_conf_thresh, debug=False):
     return cleaned
 
 
-def read_plate_text_from_image(plate_crop_bgr, ocr_conf_thresh=0.35, debug=False):
+def read_plate_text_from_image(plate_crop_bgr, ocr_conf_thresh=OCR_CONF, debug=False):
     """OCR-ONLY entry point — no detection model runs here at all.
 
     Use this on a plate image that was ALREADY located and cropped by the
@@ -450,7 +406,7 @@ def read_plate_text_from_image(plate_crop_bgr, ocr_conf_thresh=0.35, debug=False
         return ""
 
 
-def detect_plates_in_bike_crop(bike_crop, plate_conf=0.3, ocr_conf_thresh=0.35,
+def detect_plates_in_bike_crop(bike_crop, plate_conf=PLATE_CONF, ocr_conf_thresh=OCR_CONF,
                                 use_ocr=True, offset=(0, 0), debug=False):
     """Detect plate(s) in an already-cropped bike image, with OCR."""
     detections = []
@@ -543,8 +499,8 @@ def detect_plates_in_bike_crop(bike_crop, plate_conf=0.3, ocr_conf_thresh=0.35,
     return detections
 
 
-def detect_plates_in_frame(frame, bike_conf=0.3, plate_conf=0.3,
-                            ocr_conf_thresh=0.35, use_ocr=True, debug=False):
+def detect_plates_in_frame(frame, bike_conf=BIKE_CONF, plate_conf=PLATE_CONF,
+                            ocr_conf_thresh=OCR_CONF, use_ocr=True, debug=False):
     """Detect bike(s), then plate(s) inside each bike, in a full frame, with OCR."""
     detections = []
 
@@ -590,9 +546,9 @@ def detect_plates_in_frame(frame, bike_conf=0.3, plate_conf=0.3,
     return detections
 
 
-def detect_plates_in_video(input_path, output_path, bike_conf=0.3, plate_conf=0.3,
-                            ocr_conf_thresh=0.35, use_ocr=True, draw=True,
-                            progress_every=10, debug=False, debug_every=1):
+def detect_plates_in_video(input_path, output_path, bike_conf=BIKE_CONF, plate_conf=PLATE_CONF,
+                            ocr_conf_thresh=OCR_CONF, use_ocr=True, draw=True,
+                            progress_every=PLATE_VIDEO_PROGRESS_EVERY, debug=False, debug_every=PLATE_VIDEO_DEBUG_EVERY):
     """Run plate detection + OCR on a full video, save annotated output, return final plate.
 
     debug=True will print/show per-frame debug info. Since that's a LOT of
@@ -679,7 +635,7 @@ def detect_plates_in_video(input_path, output_path, bike_conf=0.3, plate_conf=0.
     }
 
 
-def get_plate_from_precropped_bike(bike_crop, plate_conf=0.3, ocr_conf_thresh=0.35,
+def get_plate_from_precropped_bike(bike_crop, plate_conf=PLATE_CONF, ocr_conf_thresh=OCR_CONF,
                                     use_ocr=True, debug=True,
                                     save_image=True, save_dir=IMAGE_SAVE_DIR):
     """Given an image that is ALREADY a tight crop of one bike (e.g. the
@@ -753,8 +709,8 @@ def get_plate_from_precropped_bike(bike_crop, plate_conf=0.3, ocr_conf_thresh=0.
     }
 
 
-def get_plate_from_bike_image(image, bike_conf=0.3, plate_conf=0.3,
-                               ocr_conf_thresh=0.35, use_ocr=True, debug=True,
+def get_plate_from_bike_image(image, bike_conf=BIKE_CONF, plate_conf=PLATE_CONF,
+                               ocr_conf_thresh=OCR_CONF, use_ocr=True, debug=True,
                                save_image=True, save_dir=IMAGE_SAVE_DIR):
     """Give a bike image (path or array), get back the detected plate text.
 

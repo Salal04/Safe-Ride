@@ -70,6 +70,11 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
+from config import (
+    UPLOAD_DIR, OUTPUT_PUBLIC_DIR, RUN_LOG_DIR, MANIFEST_PATH,
+    ALLOWED_VIDEO_EXT, BACKEND_HOST, BACKEND_PORT,
+)
+
 # The DeepSORT/turn/indicator pipeline uploaded earlier. Keep this file
 # next to it (or on PYTHONPATH). Importing it loads YOLO / OSNet / the
 # blink-detector / RAFT once, at process startup — NOT per-request — so
@@ -79,20 +84,13 @@ import deepsortVideo as pipeline
 # ----------------------------------------------------------------------
 # Folders
 # ----------------------------------------------------------------------
-BASE_DIR = Path("/content/deepSort")
-UPLOAD_DIR = BASE_DIR / "uploads"              # incoming videos land here
-OUTPUT_DIR = BASE_DIR / "output_public"        # <-- served statically, this is what the frontend hits
-RUN_LOG_DIR = BASE_DIR / "run_logs"            # per-request CSV logs
+OUTPUT_DIR = OUTPUT_PUBLIC_DIR
 
 for d in (UPLOAD_DIR, OUTPUT_DIR, RUN_LOG_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
-# Point the pipeline's own log directory at ours, so everything lives
-# under one tree instead of the Drive path hardcoded at the top of
-# deepsortVideo.py.
+# Keep run artifacts and the pipeline's profiler logs under the configured run log folder.
 pipeline.LOG_DIR = str(RUN_LOG_DIR)
-
-ALLOWED_VIDEO_EXT = {".mp4", ".mov", ".avi", ".mkv", ".webm"}
 
 app = Flask(__name__, static_folder=None)
 CORS(app)  # the ngrok URL is cross-origin from the frontend, so allow it
@@ -102,7 +100,6 @@ CORS(app)  # the ngrok URL is cross-origin from the frontend, so allow it
 # (i.e. upload time), so /videos can hand the frontend everything sorted
 # the same way regardless of how long each video took to process.
 # ----------------------------------------------------------------------
-MANIFEST_PATH = BASE_DIR / "manifest.json"
 _manifest_lock = threading.Lock()  # process_video() can run from multiple request threads
 
 
@@ -466,9 +463,8 @@ if __name__ == "__main__":
     #   from pyngrok import conf
     #   conf.get_default().auth_token = "YOUR_NGROK_AUTHTOKEN"
 
-    PORT = 5000
-    public_url = ngrok.connect(PORT, "http")
+    public_url = ngrok.connect(BACKEND_PORT, "http")
     print(f" * ngrok tunnel:  {public_url}")
     print(f" * Paste this into the frontend's backend-URL field: {public_url}")
 
-    app.run(host="0.0.0.0", port=PORT)
+    app.run(host=BACKEND_HOST, port=BACKEND_PORT)
