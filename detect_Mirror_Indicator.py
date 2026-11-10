@@ -1,9 +1,3 @@
-from ultralytics import YOLO
-from config import *
-model = YOLO(str(MIRROR_MODEL_PATH))
-
-
-result = model(str(LEGACY_IMAGE_PATH))
-
-print(result)
-
+"""Compatibility launcher for the image detection utility."""
+import runpy
+runpy.run_module("tools.detect_Mirror_Indicator", run_name="__main__")
