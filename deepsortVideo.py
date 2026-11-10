@@ -57,8 +57,21 @@ from deep_sort.deep_sort import preprocessing  # NMS on detections before tracke
 from deep_sort.deep_sort.detection import Detection
 from deep_sort.deep_sort.tracker import Tracker
 import sys
-sys.path.insert(0, str(Path(__file__).resolve().parent / "deep-person-reid"))
-from torchreid.utils import FeatureExtractor  # pip install torchreid
+LOCAL_REID_REPO = Path(__file__).resolve().parent / "deep-person-reid"
+LOCAL_REID_PACKAGE = LOCAL_REID_REPO / "torchreid" / "__init__.py"
+if not LOCAL_REID_PACKAGE.is_file():
+    raise FileNotFoundError(
+        "The bundled deep-person-reid package was not found. Expected "
+        f"{LOCAL_REID_PACKAGE}; keep deep-person-reid inside the project folder."
+    )
+sys.path.insert(0, str(LOCAL_REID_REPO))
+import torchreid
+if Path(torchreid.__file__).resolve() != LOCAL_REID_PACKAGE.resolve():
+    raise ImportError(
+        "SafeRideVision must load its bundled torchreid package from "
+        f"{LOCAL_REID_PACKAGE}, but loaded {torchreid.__file__}."
+    )
+from torchreid.utils import FeatureExtractor
 import torch
 from plate_detector import (
     detect_plates_in_bike_crop,
