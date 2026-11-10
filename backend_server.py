@@ -456,12 +456,18 @@ def process_video():
 
 
 if __name__ == "__main__":
-    from pyngrok import ngrok
+    from pyngrok import conf, ngrok
 
-    # If you have an ngrok account, set your authtoken first so the
-    # tunnel doesn't get killed by the anonymous rate limit:
-    #   from pyngrok import conf
-    #   conf.get_default().auth_token = "YOUR_NGROK_AUTHTOKEN"
+    # The Colab notebook passes this in the child process environment.
+    # Setting the token only in the notebook kernel does not configure this
+    # separate Python process.
+    ngrok_token = os.environ.get("NGROK_AUTHTOKEN", "").strip()
+    if not ngrok_token:
+        raise RuntimeError(
+            "A valid ngrok authtoken is required for a public Colab URL. "
+            "Set NGROK_AUTHTOKEN in the notebook before starting the backend."
+        )
+    conf.get_default().auth_token = ngrok_token
 
     public_url = ngrok.connect(BACKEND_PORT, "http")
     print(f" * ngrok tunnel:  {public_url}")
