@@ -4,30 +4,6 @@ import numpy as np
 
 from config import TURN_ZONE_DRAW_COLOR, TURN_ZONE_DRAW_THICKNESS
 
-def bike_flow_stats(flow, bbox):
-    """
-    Average optical-flow vector inside a single bike's bbox for this frame.
-    Returns (dx, dy, magnitude, angle_deg) — all zero if flow is unavailable
-    (first frame) or the box is degenerate.
-    """
-    if flow is None:
-        return 0.0, 0.0, 0.0, 0.0
-
-    h, w = flow.shape[:2]
-    x1, y1, x2, y2 = map(int, bbox)
-    x1, y1 = max(0, x1), max(0, y1)
-    x2, y2 = min(w, x2), min(h, y2)
-    if x2 <= x1 or y2 <= y1:
-        return 0.0, 0.0, 0.0, 0.0
-
-    patch = flow[y1:y2, x1:x2]
-    dx = float(np.mean(patch[..., 0]))
-    dy = float(np.mean(patch[..., 1]))
-    magnitude = float(np.hypot(dx, dy))
-    angle = float(np.degrees(np.arctan2(dy, dx)))
-    return dx, dy, magnitude, angle
-
-
 def xyxy_to_tlwh(box):
     # box = [x1, y1, x2, y2]
     x1, y1, x2, y2 = box

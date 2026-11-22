@@ -1,6 +1,6 @@
 # vim: expandtab:ts=4:sw=4
 
-from collections import defaultdict, deque
+from collections import deque
 import numpy as np;
 import traceback
 
@@ -11,6 +11,54 @@ def _log_track_error(track_id, context_msg):
     right after."""
     print(f"❌ EXCEPTION in track.py ({context_msg}) for track_id={track_id}", flush=True)
     traceback.print_exc()
+
+
+class ComponentKalman:
+    """Constant-velocity Kalman filter for one mirror/indicator center."""
+
+    def __init__(self, center):
+        self.state = np.array([center[0], center[1], 0.0, 0.0], dtype=np.float32)
+        self.covariance = np.diag([25.0, 25.0, 100.0, 100.0]).astype(np.float32)
+        self.transition = np.array(
+            [[1, 0, 1, 0], [0, 1, 0, 1], [0, 0, 1, 0], [0, 0, 0, 1]],
+            dtype=np.float32,
+        )
+        self.observation = np.array([[1, 0, 0, 0], [0, 1, 0, 0]], dtype=np.float32)
+        self.process_noise = np.diag([1.0, 1.0, 4.0, 4.0]).astype(np.float32)
+        self.measurement_noise = np.diag([9.0, 9.0]).astype(np.float32)
+
+    def predict(self):
+        self.state = self.transition @ self.state
+        self.covariance = (
+            self.transition @ self.covariance @ self.transition.T + self.process_noise
+        )
+        return self.state[:2].copy()
+
+    def measurement_distance(self, center):
+        measurement = np.asarray(center, dtype=np.float32)
+        residual = measurement - self.observation @ self.state
+        innovation_covariance = (
+            self.observation @ self.covariance @ self.observation.T
+            + self.measurement_noise
+        )
+        return float(residual.T @ np.linalg.solve(innovation_covariance, residual))
+
+    def update(self, center):
+        measurement = np.asarray(center, dtype=np.float32)
+        residual = measurement - self.observation @ self.state
+        innovation_covariance = (
+            self.observation @ self.covariance @ self.observation.T
+            + self.measurement_noise
+        )
+        gain = self.covariance @ self.observation.T @ np.linalg.inv(innovation_covariance)
+        self.state = self.state + gain @ residual
+        identity = np.eye(4, dtype=np.float32)
+        correction = identity - gain @ self.observation
+        self.covariance = (
+            correction @ self.covariance @ correction.T
+            + gain @ self.measurement_noise @ gain.T
+        )
+        return self.state[:2].copy()
 
 class TrackState:
     """
@@ -83,11 +131,9 @@ class Track:
         self.age = 1
         self.time_since_update = 0
         self.is_turning =False 
-        self.turn_angle = 0.0;
-        self.box_color = (0, 255, 0);  # default green — straight, until first detect_turn()/update_box_color() call
+        self.box_color = (0, 255, 0);  # default green — straight, until a turn-zone/orientation result is available
         self.zone_overlap_ratio = 0.0  # fraction (0-1) of this bike's box inside any configured turn zone, this frame
         self.state = TrackState.Tentative
-        self.trajectories =  deque(maxlen=100)  # expanded: turning bikes avg 64 frames, 59% need 51+
         self.features = []
         self.orientation = {"side":0 , "front-back":0}
 
@@ -104,12 +150,11 @@ class Track:
         # "seen both mirrors" fact — see update_mirrors() / mirror_seen_both.
         # ------------------------------------------------------------------
         self.mirror_slots = [
-            {"cord": None, "missed": 0, "hits": 0},
-            {"cord": None, "missed": 0, "hits": 0},
+            {"cord": None, "missed": 0, "hits": 0, "kalman": None},
+            {"cord": None, "missed": 0, "hits": 0, "kalman": None},
         ]
         self.mirror_seen_both = False  # sticky: True forever once confidently proven
 
-        self.trajectories =  deque(maxlen=100)  # expanded: turning bikes avg 64 frames, 59% need 51+
         self.features = []
         # Two independent indicator slots (e.g. left/right). Detections are
         # matched to whichever slot's last-known position is nearest, so a
@@ -120,12 +165,11 @@ class Track:
         # by the bike's own movement instead of going blank (see
         # update_indicators()).
         self.indicator_slots = [
-            {"cord": None, "missed": 0, "history": deque(maxlen=30), "is_signal": False, "hits": 0},
-            {"cord": None, "missed": 0, "history": deque(maxlen=30), "is_signal": False, "hits": 0},
+            {"cord": None, "missed": 0, "history": deque(maxlen=30), "is_signal": False, "hits": 0, "kalman": None},
+            {"cord": None, "missed": 0, "history": deque(maxlen=30), "is_signal": False, "hits": 0, "kalman": None},
         ]
         self.indicator_seen_both = False  # sticky: True forever once confidently proven
 
-        self.flow_history = deque(maxlen=100)  # matches trajectories maxlen — same per-frame cadence
         self.is_signal = False;
 
         # ------------------------------------------------------------------
@@ -177,40 +221,12 @@ class Track:
 
         self._n_init = n_init
         self._max_age = max_age
-        self.summary = "";
-
-    def setTrajectories(self, bbox):
-        """bbox = [x1, y1, x2, y2] — center point nikaalta hai aur store karta hai"""
-        try:
-            cx = (bbox[0] + bbox[2]) / 2
-            cy = (bbox[1] + bbox[3]) / 2
-            print("(CX, Cy): " ,cx , "," ,cy, flush=True );
-            self.trajectories.append((cx, cy))
-        except Exception:
-            _log_track_error(self.track_id, "setTrajectories")
-    
-    def getAllTrajectoriesOfX(self):
-        return list(self.trajectories)
-
-    def setFlow(self, flow_stats):
-        """flow_stats = (dx, dy, magnitude, angle_deg) — one RAFT reading for this frame"""
-        self.flow_history.append(flow_stats)
-
-    def getFlowHistory(self):
-        return list(self.flow_history)
-    
     def setOrientation(self , orien):
         self.orientation[orien] = self.orientation.get(orien, 0)+1;
 
     def update_mirrors(self, detections, movement_dx=0.0, movement_dy=0.0,
                         max_missed=15, min_hits_for_both=3):
-        """Assign this frame's mirror detections to the two persistent
-        slots, exactly like update_indicators() does for indicators — see
-        that method's docstring for the full rationale. The short version:
-        when YOLO fails to find a mirror this frame (bad angle, glare,
-        motion blur, brief occlusion), we don't throw the last-known box
-        away — we shift it forward by however much the bike itself moved,
-        so the "guess" tracks the bike instead of freezing or vanishing.
+        """Update mirror slots with gated Kalman prediction and correction.
 
         Parameters
         ----------
@@ -218,7 +234,7 @@ class Track:
             Mirror boxes matched to this bike THIS frame, each
             `[conf, x1, y1, x2, y2]`. Usually 0, 1, or 2 items.
         movement_dx, movement_dy : float
-            How much the bike itself moved since the last frame.
+            Legacy arguments retained for caller compatibility; unused.
         max_missed : int
             After this many consecutive misses, a slot is cleared so a
             genuinely new mirror detection (e.g. after occlusion ends) can
@@ -235,81 +251,94 @@ class Track:
             _log_track_error(self.track_id, "update_mirrors")
 
     def _update_mirrors_impl(self, detections, movement_dx, movement_dy, max_missed, min_hits_for_both):
-        # 1. Carry every currently-known slot forward by the bike's motion.
-        for slot in self.mirror_slots:
-            if slot["cord"] is not None:
-                c = slot["cord"]
-                slot["cord"] = [c[0], c[1] + movement_dx, c[2] + movement_dy,
-                                 c[3] + movement_dx, c[4] + movement_dy]
-
-        def center(box):
-            return ((box[1] + box[3]) / 2.0, (box[2] + box[4]) / 2.0)
-
-        matched_slots = set()
-        matched_dets = set()
-
-        occupied = [i for i, s in enumerate(self.mirror_slots) if s["cord"] is not None]
-
-        # 2. Match new detections to their nearest EXISTING (occupied) slot
-        #    first, so a mirror can't hop slots and swap identity.
-        if occupied and detections:
-            pairs = []
-            for si in occupied:
-                scx, scy = center(self.mirror_slots[si]["cord"])
-                for di, det in enumerate(detections):
-                    dcx, dcy = center(det)
-                    dist = ((scx - dcx) ** 2 + (scy - dcy) ** 2) ** 0.5
-                    pairs.append((dist, si, di))
-            pairs.sort(key=lambda p: p[0])
-            for dist, si, di in pairs:
-                if si in matched_slots or di in matched_dets:
-                    continue
-                matched_slots.add(si)
-                matched_dets.add(di)
-                slot = self.mirror_slots[si]
-                slot["cord"] = detections[di]
-                slot["missed"] = 0
-                slot["hits"] += 1
-
-        # 3. Leftover detections fill any empty slot first.
-        empty = [i for i, s in enumerate(self.mirror_slots) if i not in matched_slots and s["cord"] is None]
-        leftover_dets = [d for d in range(len(detections)) if d not in matched_dets]
-        for di in leftover_dets:
-            if not empty:
-                break
-            si = empty.pop(0)
-            self.mirror_slots[si]["cord"] = detections[di]
-            self.mirror_slots[si]["missed"] = 0
-            self.mirror_slots[si]["hits"] += 1
-            matched_dets.add(di)
-            matched_slots.add(si)
-
-        # 4. Any slot not matched this frame missed a beat — its cord was
-        #    already carried forward by movement in step 1.
-        for i, slot in enumerate(self.mirror_slots):
-            if i in matched_slots:
-                continue
-            if slot["cord"] is not None:
-                slot["missed"] += 1
-                if slot["missed"] > max_missed:
-                    slot["cord"] = None
-                    slot["missed"] = 0
-                    slot["hits"] = 0
-
-        # 5. Sticky lifetime fact: has this bike ever confidently shown BOTH
-        #    mirrors at once? Once True it stays True for the life of the
-        #    track — a mirror going missing later (occlusion, angle) doesn't
-        #    erase the fact that the bike has two.
+        # The previous nearest-slot/center-shift implementation is replaced
+        # by gated Kalman prediction and correction in _update_component_slots().
+        self._update_component_slots(self.mirror_slots, detections, max_missed)
         if not self.mirror_seen_both:
-            h0 = self.mirror_slots[0]["hits"]
-            h1 = self.mirror_slots[1]["hits"]
+            h0, h1 = (slot["hits"] for slot in self.mirror_slots)
             if h0 >= min_hits_for_both and h1 >= min_hits_for_both:
                 self.mirror_seen_both = True
 
+    def _update_component_slots(self, slots, detections, max_missed):
+        """Predict component centers, gate detections, and correct matched slots."""
+        gate = 9.21  # 99% chi-square gate for a two-dimensional measurement
+        candidates = []
+
+        # Predict each existing slot once for this frame.
+        for si, slot in enumerate(slots):
+            if slot["cord"] is None:
+                continue
+            if slot["kalman"] is None:
+                c = slot["cord"]
+                slot["kalman"] = ComponentKalman(((c[1] + c[3]) / 2, (c[2] + c[4]) / 2))
+            slot["kalman"].predict()
+            for di, det in enumerate(detections):
+                center = ((det[1] + det[3]) / 2, (det[2] + det[4]) / 2)
+                distance = slot["kalman"].measurement_distance(center)
+                if distance <= gate:
+                    candidates.append((distance, si, di))
+
+        # One-to-one gated assignment. With two slots, sorting the valid
+        # candidate costs is small and prevents distant detections taking
+        # over a track.
+        candidates.sort(key=lambda pair: pair[0])
+        matched_slots, matched_dets = set(), set()
+        for _, si, di in candidates:
+            if si in matched_slots or di in matched_dets:
+                continue
+            matched_slots.add(si)
+            matched_dets.add(di)
+            det = detections[di]
+            slot = slots[si]
+            center = slot["kalman"].update(((det[1] + det[3]) / 2, (det[2] + det[4]) / 2))
+            width, height = det[3] - det[1], det[4] - det[2]
+            slot["cord"] = [
+                det[0], center[0] - width / 2, center[1] - height / 2,
+                center[0] + width / 2, center[1] + height / 2,
+            ]
+            slot["missed"] = 0
+            slot["hits"] += 1
+
+        # Unmatched tracks use their Kalman prediction briefly. Clear all
+        # identity-specific state on timeout so later detections start fresh.
+        for si, slot in enumerate(slots):
+            if slot["cord"] is None or si in matched_slots:
+                continue
+            slot["missed"] += 1
+            if slot["missed"] > max_missed:
+                slot["cord"] = None
+                slot["kalman"] = None
+                slot["missed"] = 0
+                slot["hits"] = 0
+                slot["is_signal"] = False
+                if "history" in slot:
+                    slot["history"].clear()
+                continue
+            center = slot["kalman"].state[:2]
+            width, height = slot["cord"][3] - slot["cord"][1], slot["cord"][4] - slot["cord"][2]
+            slot["cord"] = [
+                slot["cord"][0], center[0] - width / 2, center[1] - height / 2,
+                center[0] + width / 2, center[1] + height / 2,
+            ]
+
+        # Start filters for unmatched detections in empty slots.
+        empty_slots = [si for si, slot in enumerate(slots) if slot["cord"] is None]
+        for di, det in enumerate(detections):
+            if di in matched_dets or not empty_slots:
+                continue
+            si = empty_slots.pop(0)
+            center = ((det[1] + det[3]) / 2, (det[2] + det[4]) / 2)
+            slots[si]["cord"] = det
+            slots[si]["kalman"] = ComponentKalman(center)
+            slots[si]["missed"] = 0
+            slots[si]["hits"] += 1
+            slots[si]["is_signal"] = False
+            if "history" in slots[si]:
+                slots[si]["history"].clear()
+
     def update_indicators(self, detections, movement_dx=0.0, movement_dy=0.0,
                            max_missed=15, min_hits_for_both=3):
-        """Assign this frame's indicator detections to the two persistent
-        slots, keeping each slot's identity stable across frames.
+        """Update indicator slots using the same Kalman tracker as mirrors.
 
         Parameters
         ----------
@@ -317,11 +346,7 @@ class Track:
             Indicator boxes matched to this bike THIS frame, each
             `[conf, x1, y1, x2, y2]`. Usually 0, 1, or 2 items.
         movement_dx, movement_dy : float
-            How much the bike itself moved since the last frame (e.g. the
-            change in its trajectory center). Any slot that does NOT get a
-            fresh detection this frame has its last-known cord shifted by
-            this amount, so a briefly-missed indicator keeps tracking the
-            bike instead of freezing in place or vanishing.
+            Legacy arguments retained for caller compatibility; unused.
         max_missed : int
             After this many consecutive misses, a slot is cleared out so a
             genuinely new indicator (e.g. after occlusion ends) can claim it.
@@ -336,78 +361,11 @@ class Track:
             _log_track_error(self.track_id, "update_indicators")
 
     def _update_indicators_impl(self, detections, movement_dx, movement_dy, max_missed, min_hits_for_both):
-        # 1. Carry every currently-known slot forward by the bike's motion.
-        #    If a slot gets a real detection below, this gets overwritten;
-        #    if not, this IS the slot's position for the frame.
-        for slot in self.indicator_slots:
-            if slot["cord"] is not None:
-                c = slot["cord"]
-                slot["cord"] = [c[0], c[1] + movement_dx, c[2] + movement_dy,
-                                 c[3] + movement_dx, c[4] + movement_dy]
-
-        def center(box):
-            return ((box[1] + box[3]) / 2.0, (box[2] + box[4]) / 2.0)
-
-        matched_slots = set()
-        matched_dets = set()
-
-        occupied = [i for i, s in enumerate(self.indicator_slots) if s["cord"] is not None]
-
-        # 2. Match new detections to their nearest EXISTING (occupied) slot
-        #    first — this is what keeps the two indicators from switching:
-        #    a box near the last-known "slot 0" position stays slot 0 even
-        #    if slot 1's detection happens to come first in the list.
-        if occupied and detections:
-            pairs = []
-            for si in occupied:
-                scx, scy = center(self.indicator_slots[si]["cord"])
-                for di, det in enumerate(detections):
-                    dcx, dcy = center(det)
-                    dist = ((scx - dcx) ** 2 + (scy - dcy) ** 2) ** 0.5
-                    pairs.append((dist, si, di))
-            pairs.sort(key=lambda p: p[0])
-            for dist, si, di in pairs:
-                if si in matched_slots or di in matched_dets:
-                    continue
-                matched_slots.add(si)
-                matched_dets.add(di)
-                slot = self.indicator_slots[si]
-                slot["cord"] = detections[di]
-                slot["missed"] = 0
-                slot["hits"] += 1
-
-        # 3. Leftover detections (no occupied slot was close, or slot was
-        #    empty to begin with) fill any empty slot first.
-        empty = [i for i, s in enumerate(self.indicator_slots) if i not in matched_slots and s["cord"] is None]
-        leftover_dets = [d for d in range(len(detections)) if d not in matched_dets]
-        for di in leftover_dets:
-            if not empty:
-                break
-            si = empty.pop(0)
-            self.indicator_slots[si]["cord"] = detections[di]
-            self.indicator_slots[si]["missed"] = 0
-            self.indicator_slots[si]["hits"] += 1
-            matched_dets.add(di)
-            matched_slots.add(si)
-
-        # 4. Any slot not matched this frame missed a beat — its cord was
-        #    already carried forward by movement in step 1.
-        for i, slot in enumerate(self.indicator_slots):
-            if i in matched_slots:
-                continue
-            if slot["cord"] is not None:
-                slot["missed"] += 1
-                if slot["missed"] > max_missed:
-                    slot["cord"] = None
-                    slot["missed"] = 0
-                    slot["is_signal"] = False
-                    slot["hits"] = 0
-
-        # 5. Sticky lifetime fact: has this bike ever confidently shown BOTH
-        #    indicators at once? Mirrors mirror_seen_both's logic exactly.
+        # Legacy nearest-slot matching and bike-center translation are
+        # inactive; both feature types now use the same Kalman slot tracker.
+        self._update_component_slots(self.indicator_slots, detections, max_missed)
         if not self.indicator_seen_both:
-            h0 = self.indicator_slots[0]["hits"]
-            h1 = self.indicator_slots[1]["hits"]
+            h0, h1 = (slot["hits"] for slot in self.indicator_slots)
             if h0 >= min_hits_for_both and h1 >= min_hits_for_both:
                 self.indicator_seen_both = True
 
@@ -479,7 +437,7 @@ class Track:
 
     def mark_turn_frame(self):
         """Call once per frame, after `is_turning` and `is_signal` are both
-        finalized for the frame (i.e. after detect_turn()/the turn-zone
+        finalized for the frame (i.e. after the turn-zone/orientation
         check AND the indicator/blink check have both run). Rolls those
         per-frame flags up into the two sticky, track-lifetime facts used
         in the final CSV summary:
@@ -502,8 +460,7 @@ class Track:
         pass
 
     def GetSummary(self):
-        turn_str = f" TURNING {self.turn_angle:.0f}°" if self.is_turning else ""
-        turn_str += "|" + self.summary;
+        turn_str = " TURNING (ZONE)" if self.is_turning else ""
         return f"ID:{self.track_id}{turn_str}"
     
     def to_tlwh(self):
@@ -591,121 +548,8 @@ class Track:
         """Returns True if this track is dead and should be deleted."""
         return self.state == TrackState.Deleted
     
-    def detect_turn(self, angle_threshold=55, min_points=10, min_displacement=20):
-        """Detect whether this track is making a turn.
-
-        Classification is based solely on cumulative absolute angle change.
-        A value above `angle_threshold` (default 30°, per report) strongly
-        indicates a turn; 57% of turning bikes exceed this vs only 11% of
-        straight-moving bikes.
-
-        Parameters
-        ----------
-        angle_threshold : float
-            Minimum cumulative absolute angle change (°) to flag a turn.
-            Report recommends 30°.
-        min_points : int
-            Minimum trajectory points required before any decision is made.
-        min_displacement : float
-            Minimum total displacement (px) to rule out a stationary track.
-        """
-        try:
-            return self._detect_turn_impl(angle_threshold, min_points, min_displacement)
-        except Exception:
-            _log_track_error(self.track_id, "detect_turn")
-            self.is_turning = False
-            self.turn_angle = 0.0
-            return False, 0.0, ""
-
-    def _detect_turn_impl(self, angle_threshold, min_points, min_displacement):
-        pts = list(self.trajectories)
-        seq_len = len(pts)
-
-        # ── 1. Not enough history ────────────────────────────────────────────
-        if seq_len < min_points:
-            self.is_turning = False
-            self.turn_angle = 0.0
-            return False, 0.0, ""
-
-        arr = np.array(pts, dtype=np.float32)
-
-        # ── 2. Smoothing — 5-point moving average ────────────────────────────
-        if len(arr) >= 5:
-            kernel = np.ones(5, dtype=np.float32) / 5.0
-            x_smooth = np.convolve(arr[:, 0], kernel, mode="same")
-            y_smooth = np.convolve(arr[:, 1], kernel, mode="same")
-            arr = np.stack([x_smooth, y_smooth], axis=1)
-
-        # ── 3. Displacement guard ────────────────────────────────────────────
-        total_disp = float(np.linalg.norm(arr[-1] - arr[0]))
-        if total_disp < min_displacement:
-            self.is_turning = False
-            self.turn_angle = 0.0
-            s = (f" - Track_id:{self.track_id} | CumAngle:0.00 | SeqLen:{seq_len}"
-                 f" | TotalDisp:{total_disp:.1f} | Is Turning:False [low disp]")
-            return False, 0.0, s
-
-        # ── 4. Primary feature: cumulative absolute angle change ─────────────
-        # Compute heading for each consecutive pair of trajectory points, then
-        # sum the absolute frame-to-frame heading differences.  This directly
-        # mirrors the "total absolute angle change" feature from the report
-        # and is far more sensitive than the single 3-point angle used before.
-        vectors = arr[1:] - arr[:-1]                          # (N-1, 2)
-        norms   = np.linalg.norm(vectors, axis=1, keepdims=True)
-        # Filter out near-zero motion segments to avoid noisy headings
-        valid_mask = (norms[:, 0] > 1e-2)
-        if valid_mask.sum() < 2:
-            self.is_turning = False
-            self.turn_angle = 0.0
-            s = (f" - Track_id:{self.track_id} | CumAngle:0.00 | SeqLen:{seq_len}"
-                 f" | TotalDisp:{total_disp:.1f} | Is Turning:False [no valid motion]")
-            return False, 0.0, s
-
-        valid_vecs = vectors[valid_mask]
-        # Heading angles in degrees
-        headings = np.degrees(np.arctan2(valid_vecs[:, 1], valid_vecs[:, 0]))
-        # Absolute frame-to-frame heading differences (wrapped to [-180, 180])
-        delta = np.diff(headings)
-        delta = (delta + 180) % 360 - 180                     # wrap
-        cumulative_angle_change = float(np.sum(np.abs(delta)))
-
-        # ── 5. Classification: cumulative angle threshold only ───────────────
-        self.turn_angle = cumulative_angle_change
-        if cumulative_angle_change <= 10:
-            self.summary = "A<10"
-            self.is_turning = False;
-        elif self.orientation["side"] >=3 and self.orientation["front-back"] >=3   and cumulative_angle_change > 15: 
-            self.summary = "A>10+side"
-            self.is_turning = True;
-
-        # NOTE: box_color is no longer decided here. A turn-zone check (see
-        # deepsortVideo.py) can also flag is_turning AFTER this method
-        # returns, so setting color here would get overwritten/stale. Color
-        # is now decided once per frame, after every turn signal (angle-based
-        # AND zone-based) is finalized, via update_box_color() below.
-
-        s = (f" - Track_id:{self.track_id}"
-             f" | CumAngle:{cumulative_angle_change:.2f}"
-             f" | Threshold:{angle_threshold}"
-             f" | SeqLen:{seq_len}"
-             f" | TotalDisp:{total_disp:.1f}"
-             f" | Is Turning:{self.is_turning}")
-
-        print(
-            "Track_id:", self.track_id,
-            "| CumAngle:", round(cumulative_angle_change, 2),
-            "| Threshold:", angle_threshold,
-            "| Is Turning:", self.is_turning
-        )
-        return True, cumulative_angle_change, s
-
     def update_box_color(self):
-        """Single source of truth for this bike's box color, called once per
-        frame after `is_turning` (from detect_turn AND/OR a turn-zone
-        overlap check) and `is_signal` are both finalized. Same rule applies
-        whether turning was flagged by the angle-based detector alone, by a
-        turn-zone overlap alone, or by both — the two paths just feed the
-        same `is_turning` flag before this runs.
+        """Apply the display color after turn and signal states are finalized.
 
             not turning                    -> green  (straight)
             turning, indicator NOT active   -> red    (turning, no signal)

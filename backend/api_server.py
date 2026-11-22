@@ -34,12 +34,9 @@ WHAT THIS FILE DOES
 2. Turns the frontend's `junctions` (rectangle/circle/polygon, in native
    frame pixels) into the TURN_ZONES format `deepsortVideo.py` already
    knows how to rasterize and check bikes against.
-   - mode == "direct"            -> TURN_ZONES = []  (angle-detector only,
-                                     exactly the "no polygon" pipeline path)
-   - mode == "junction" + zones  -> TURN_ZONES = [...]  (zone-overlap ALSO
-                                     counts as a turn, on top of the angle
-                                     detector — same OR logic already in
-                                     deepsortVideo.py, nothing to change there)
+   - mode == "direct"            -> TURN_ZONES = []  (orientation-only turns)
+   - mode == "junction" + zones  -> TURN_ZONES = [...]  (zone overlap alone
+                                     classifies turns)
 3. Runs `deepsortVideo.run_video()` on the saved file.
 4. Moves the processed .mp4 into a public "output_public" folder and
    serves it back over a static route, so the frontend can just point a
@@ -180,8 +177,7 @@ def process_video():
     video_file.save(str(in_path))
 
     # This is the "if polygon is available or not" switch: junction
-    # zones from the drawn shapes, or [] to fall back to angle-only turn
-    # detection when the user ran in direct mode.
+    # zones from the drawn shapes; direct mode supplies no turn zones.
     turn_zones = _parse_turn_zones(request.form)
     try:
         with _pipeline_lock:

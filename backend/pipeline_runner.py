@@ -27,7 +27,7 @@ from .plate_detector import (
     detect_plates_in_bike_crop, read_plate_text_from_image,
     warm_up_ocr, warm_up_plate_detector,
 )
-from .vision_geometry import bike_flow_stats, build_zone_mask, draw_zones, xyxy_to_tlwh, zone_overlap_ratio
+from .vision_geometry import build_zone_mask, draw_zones, xyxy_to_tlwh, zone_overlap_ratio
 
 logger = logging.getLogger("deepsortVideo")
 
@@ -199,10 +199,9 @@ def run_video(video_path, output_path=None, display_name=None, turn_zones=None):
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         writer = cv2.VideoWriter(raw_output_path, fourcc, fps, (width, height))
 
-    # Built once — zones are static for the whole clip. None if turn_zones
-    # is empty, in which case zone_overlap_ratio() always returns 0.0 and
-    # the pipeline runs on angle-based turn detection alone (unchanged
-    # behavior for videos with no zones configured).
+    # Built once — zones are static for the whole clip. When zones are
+    # configured, overlap alone classifies turns. Without zones, orientation
+    # evidence alone is used as the fallback.
     zone_mask = build_zone_mask(turn_zones, width, height)
 
     frame_idx = 0
@@ -226,8 +225,6 @@ def run_video(video_path, output_path=None, display_name=None, turn_zones=None):
         # which frame it died on.
         print(f"[FRAME {frame_idx}] --- start ---", flush=True)
         logger.debug(f"[FRAME {frame_idx}] start")
-
-        flow = None  # optical flow removed (was RAFT) -- bike_flow_stats() returns zeros for this
 
         try:
             motorcycle_boxes ,_ = getDetections(yolo , frame , ['motorcycle'], tag="det.bike");
@@ -322,30 +319,6 @@ def run_video(video_path, output_path=None, display_name=None, turn_zones=None):
         P.metric("n_mirror_dets", len(mirrors))
         P.metric("n_indicator_dets", len(indicators))
 
-        # Update trajectories / turn detection FIRST, so bike.is_turning
-        # below reflects THIS frame rather than lagging by one frame (as in
-        # the original ordering, where detect_turn() ran after is_turning
-        # was already consumed for the indicator/blink check).
-        turn_results = {}
-        for bike in live_tracks:
-            try:
-                with P.stage("logic.trajectory_turn"):
-                    bike.setTrajectories(bike.to_tlbr())
-                    turn_results[bike.track_id] = bike.detect_turn()
-
-                # Turn-zone check: works alongside the angle-based detector
-                # above, not instead of it — either one flagging a turn is
-                # enough. With turn_zones empty, zone_mask is None and this is a
-                # no-op (ratio 0.0, is_turning left exactly as detect_turn() set
-                # it), so this is safe to leave on for every video.
-                with P.stage("logic.turn_zone"):
-                    ratio = zone_overlap_ratio(zone_mask, bike.to_tlbr())
-                bike.zone_overlap_ratio = ratio
-                if ratio >= TURN_ZONE_OVERLAP_THRESHOLD:
-                    bike.is_turning = True
-            except Exception:
-                log_exception(f"trajectory/turn update track_id={bike.track_id} at frame_idx={frame_idx}")
-
         for box, orientation in zip(orientation_boxes, orientation_classes):
             try:
                 bbox = box[1:]  # x1, y1, x2, y2
@@ -355,6 +328,27 @@ def run_video(video_path, output_path=None, display_name=None, turn_zones=None):
                         bike.setOrientation(orientation)
             except Exception:
                 log_exception(f"orientation assignment at frame_idx={frame_idx}")
+
+        # Use junction overlap when configured, otherwise fall back to
+        # orientation evidence alone.
+        # Orientation counts are accumulated per track to require repeated
+        # detections of both views before accepting a turn.
+        for bike in live_tracks:
+            try:
+                with P.stage("logic.turn_zone_orientation"):
+                    ratio = zone_overlap_ratio(zone_mask, bike.to_tlbr())
+                bike.zone_overlap_ratio = ratio
+                orientation_confirmed = (
+                    bike.orientation.get("side", 0) >= 3
+                    and bike.orientation.get("front-back", 0) >= 3
+                )
+                if zone_mask is not None:
+                    bike.is_turning = ratio >= TURN_ZONE_OVERLAP_THRESHOLD
+                else:
+                    bike.is_turning = orientation_confirmed
+            except Exception:
+                log_exception(f"turn-zone/orientation update track_id={bike.track_id} at frame_idx={frame_idx}")
+                bike.is_turning = False
 
         # Group this frame's mirror detections by the track they matched,
         # for the same reason indicators are grouped below: update_mirrors()
@@ -374,24 +368,16 @@ def run_video(video_path, output_path=None, display_name=None, turn_zones=None):
             try:
                 dets = mirrors_by_track.get(bike.track_id, [])
 
-                traj = bike.getAllTrajectoriesOfX()
-                if len(traj) >= 2:
-                    move_dx = traj[-1][0] - traj[-2][0]
-                    move_dy = traj[-1][1] - traj[-2][1]
-                else:
-                    move_dx, move_dy = 0.0, 0.0
-
                 with P.stage("logic.mirror_update"):
-                    bike.update_mirrors(dets, move_dx, move_dy,
-                                         min_hits_for_both=MIN_SLOT_HITS_FOR_BOTH)
+                    bike.update_mirrors(
+                        dets, max_missed=15,
+                        min_hits_for_both=MIN_SLOT_HITS_FOR_BOTH,
+                    )
             except Exception:
                 log_exception(f"update_mirrors track_id={bike.track_id} at frame_idx={frame_idx}")
 
-        # Group this frame's indicator detections by the track they matched,
-        # so both indicators on a bike (0, 1, or 2 boxes) are handed to
-        # update_indicators() together — the nearest-neighbor slot matching
-        # needs to see them as a set, not one at a time, or it can't tell
-        # which detection is "the one that was already left" vs "right".
+        # Group indicator detections by bike before one-to-one Kalman slot
+        # association.
         indicators_by_track = defaultdict(list)
         for indicator in indicators:
             try:
@@ -406,19 +392,11 @@ def run_video(video_path, output_path=None, display_name=None, turn_zones=None):
             try:
                 dets = indicators_by_track.get(bike.track_id, [])
 
-                # How far the bike itself moved this frame, so a slot that
-                # misses detection this frame can still shift forward with the
-                # bike instead of freezing or vanishing.
-                traj = bike.getAllTrajectoriesOfX()
-                if len(traj) >= 2:
-                    move_dx = traj[-1][0] - traj[-2][0]
-                    move_dy = traj[-1][1] - traj[-2][1]
-                else:
-                    move_dx, move_dy = 0.0, 0.0
-
                 with P.stage("logic.indicator_update"):
-                    bike.update_indicators(dets, move_dx, move_dy,
-                                            min_hits_for_both=MIN_SLOT_HITS_FOR_BOTH)
+                    bike.update_indicators(
+                        dets, max_missed=15,
+                        min_hits_for_both=MIN_SLOT_HITS_FOR_BOTH,
+                    )
             except Exception:
                 log_exception(f"update_indicators track_id={bike.track_id} at frame_idx={frame_idx}")
                 continue
@@ -456,8 +434,7 @@ def run_video(video_path, output_path=None, display_name=None, turn_zones=None):
 
         # Centralized color rule — applies to EVERY live track (not just
         # the ones that were turning), so straight bikes get green too.
-        # Same rule regardless of whether is_turning came from the
-        # angle-based detector, a turn-zone overlap, or both:
+        # Same rule for every track, using the turn-zone/orientation result:
         #   not turning            -> green
         #   turning, no indicator  -> red
         #   turning, indicator ON  -> black
@@ -647,8 +624,6 @@ def run_video(video_path, output_path=None, display_name=None, turn_zones=None):
                     strs = "TF"
 
                 x1, y1, x2, y2 = map(int, bbox)
-                flow_dx, flow_dy, flow_mag, flow_angle = bike_flow_stats(flow, bbox)
-                bikes.setFlow((flow_dx, flow_dy, flow_mag, flow_angle))
 
                 with P.stage("draw.boxes"):
                     draw_box(frame, (x1, y1, x2, y2), f'bike: {bikes.track_id} - {strs}', bikes.box_color)

@@ -43,7 +43,7 @@ print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "No GPU")
 device = ("cuda" if torch.cuda.is_available() else "cpu") if DEVICE == "auto" else DEVICE
 
 from backend.vision_geometry import (
-    bike_flow_stats, build_zone_mask, compute_iou, draw_zones, is_box_inside,
+    build_zone_mask, compute_iou, draw_zones, is_box_inside,
     xyxy_to_tlwh, zone_overlap_ratio,
 )
 from backend.pipeline_profiler import P, PipelineProfiler, compare_reports, render_report, _safe_slug

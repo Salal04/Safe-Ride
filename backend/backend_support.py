@@ -75,10 +75,11 @@ def _junction_to_zone(j):
 
 
 def _parse_turn_zones(form):
-    """[] whenever mode != 'junction' or nothing usable was sent — that's
-    the signal deepsortVideo.py's TURN_ZONES already treats as "run on
-    angle-based turn detection alone" (build_zone_mask returns None,
-    zone_overlap_ratio is always 0.0)."""
+    """Return zones only for usable junction-mode shapes.
+
+    An empty list selects orientation-only turn classification in the
+    pipeline; configured zones select zone-overlap-only classification.
+    """
     if form.get("mode", "direct") != "junction":
         return []
 
